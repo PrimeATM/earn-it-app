@@ -1,0 +1,2876 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Earn It — a family chore and allowance ledger.">
+<style>body{margin:0;font:14px system-ui,sans-serif;} img{max-width:100%;} [hidden]{display:none!important;}</style>
+</head>
+<body>
+<title>Earn It</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --bg:#eef1e8;
+    --surface:#ffffff;
+    --surface-2:#f7f6ee;
+    --ink:#1f2c22;
+    --ink-soft:#5c6b5f;
+    --ink-faint:#8b9a8d;
+    --line:#d8dcc8;
+    --line-strong:#b9c2a6;
+    --accent:#bf7326;
+    --accent-ink:#7a4718;
+    --accent-soft:#f3e3c8;
+    --pine:#2f6a3d;
+    --pine-soft:#e2eee2;
+    --rust:#a8402a;
+    --rust-soft:#f5e2dc;
+    --shadow: 0 1px 0 rgba(31,44,34,0.05), 0 8px 20px -12px rgba(31,44,34,0.25);
+    --radius: 14px;
+    --wheel-1:#2f6a3d; --wheel-2:#bf7326; --wheel-3:#a8402a;
+    --wheel-4:#5b7f4b; --wheel-5:#2c6a67; --wheel-6:#7a5288;
+    --spend:#bf7326; --save:#2f6a3d; --invest:#2c6a67;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#161e18;
+      --surface:#202b22;
+      --surface-2:#1a231c;
+      --ink:#eef1e8;
+      --ink-soft:#aab8ac;
+      --ink-faint:#7c8a7e;
+      --line:#354034;
+      --line-strong:#48573f;
+      --accent:#e2a355;
+      --accent-ink:#f5d9a8;
+      --accent-soft:#3a2f1d;
+      --pine:#7bc48a;
+      --pine-soft:#20362a;
+      --rust:#e2836c;
+      --rust-soft:#3a2420;
+      --shadow: 0 1px 0 rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.6);
+      --wheel-1:#3d8a51; --wheel-2:#d98b34; --wheel-3:#c05038;
+      --wheel-4:#6f9a5c; --wheel-5:#38857f; --wheel-6:#9a6ba6;
+      --spend:#e2a355; --save:#7bc48a; --invest:#4fa79f;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#161e18;
+    --surface:#202b22;
+    --surface-2:#1a231c;
+    --ink:#eef1e8;
+    --ink-soft:#aab8ac;
+    --ink-faint:#7c8a7e;
+    --line:#354034;
+    --line-strong:#48573f;
+    --accent:#e2a355;
+    --accent-ink:#f5d9a8;
+    --accent-soft:#3a2f1d;
+    --pine:#7bc48a;
+    --pine-soft:#20362a;
+    --rust:#e2836c;
+    --rust-soft:#3a2420;
+    --shadow: 0 1px 0 rgba(0,0,0,0.2), 0 8px 24px -12px rgba(0,0,0,0.6);
+    --wheel-1:#3d8a51; --wheel-2:#d98b34; --wheel-3:#c05038;
+    --wheel-4:#6f9a5c; --wheel-5:#38857f; --wheel-6:#9a6ba6;
+    --spend:#e2a355; --save:#7bc48a; --invest:#4fa79f;
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Karla, 'Segoe UI', system-ui, sans-serif;
+    padding: 0 16px 64px;
+    line-height:1.45;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  h1,h2,h3{font-family:'Zilla Slab', Georgia, serif; text-wrap:balance; margin:0;}
+  .wrap{max-width:760px; margin:0 auto;}
+  a{color:inherit;}
+  button{font-family:inherit; cursor:pointer;}
+  input, select{font-family:inherit;}
+
+  /* ---------- topbar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:22px 0 14px; border-bottom:3px double var(--line-strong);
+    flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:'Zilla Slab'; font-weight:700; font-size:1.15rem;
+    box-shadow: inset 0 0 0 3px rgba(255,255,255,0.35);
+    flex:none;
+  }
+  .brand h1{font-size:1.5rem; font-weight:700; letter-spacing:0.01em;}
+  .brand small{display:block; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); font-weight:600;}
+  .topbar-actions{display:flex; align-items:center; gap:8px;}
+
+  .pill-btn{
+    border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);
+    padding:8px 14px; border-radius:999px; font-size:0.82rem; font-weight:600;
+    display:inline-flex; align-items:center; gap:6px; transition:transform .08s ease, background .15s ease;
+  }
+  .pill-btn:active{transform:scale(0.96);}
+  .pill-btn.on{background:var(--pine); border-color:var(--pine); color:#fff;}
+
+  /* ---------- kid tabs ---------- */
+  .kidtabs{display:flex; gap:8px; overflow-x:auto; padding:16px 0 4px; scrollbar-width:thin;}
+  .tab{
+    flex:none; display:flex; align-items:center; gap:8px; padding:9px 16px 9px 10px;
+    background:var(--surface-2); border:1px solid var(--line); border-bottom:3px solid var(--line);
+    border-radius:10px 10px 4px 4px; font-weight:700; font-family:'Zilla Slab'; font-size:1rem; color:var(--ink-soft);
+  }
+  .tab .tab-emoji{font-size:1.15rem;}
+  .tab.active{background:var(--surface); border-color:var(--line-strong); border-bottom-color:var(--accent); color:var(--ink); box-shadow:var(--shadow);}
+  .tab.add{color:var(--accent-ink); border-style:dashed;}
+
+  /* ---------- cards ---------- */
+  main{padding-top:18px; display:flex; flex-direction:column; gap:18px;}
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; box-shadow:var(--shadow);
+  }
+  .card-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:14px; flex-wrap:wrap;}
+  .card-head h2{font-size:1.05rem;}
+  .eyebrow{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); font-weight:700;}
+
+  /* ---------- paystub ---------- */
+  .paystub{background:linear-gradient(180deg, var(--surface), var(--surface-2)); position:relative; overflow:hidden;}
+  .paystub::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:6px;
+    background:repeating-linear-gradient(90deg, var(--accent) 0 10px, transparent 10px 20px);
+    opacity:0.5;
+  }
+  .stub-row{display:flex; align-items:flex-end; justify-content:space-between; gap:18px; flex-wrap:wrap;}
+  .balance-label{font-size:0.78rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); font-weight:700; margin-bottom:4px;}
+  .balance-num{
+    font-family:'Space Mono', monospace; font-weight:700; font-variant-numeric:tabular-nums;
+    font-size:clamp(2.3rem, 9vw, 3.2rem); color:var(--pine); line-height:1;
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .balance-num.bump{transform:scale(1.08) rotate(-1deg);}
+  .stub-side{text-align:right; font-family:'Space Mono', monospace; font-size:0.95rem; color:var(--ink-soft);}
+  .buckets{display:grid; grid-template-columns:repeat(auto-fit, minmax(112px,1fr)); gap:10px; margin-top:18px;}
+  .bucket{
+    padding:11px 13px; border-radius:10px; background:var(--surface);
+    border:1px solid var(--line); border-left:3px solid var(--b);
+  }
+  .bucket-label{font-size:0.67rem; text-transform:uppercase; letter-spacing:0.1em; font-weight:700; color:var(--ink-faint);}
+  .bucket-amt{
+    font-family:'Space Mono', monospace; font-weight:700; font-size:1.2rem;
+    font-variant-numeric:tabular-nums; color:var(--b); line-height:1.3;
+  }
+  .bucket-sub{font-size:0.72rem; color:var(--ink-faint); margin-top:1px; line-height:1.35;}
+  .bucket-sub .up{color:var(--pine); font-weight:700;}
+  .bucket-sub .down{color:var(--rust); font-weight:700;}
+  .goal-bar{height:5px; border-radius:3px; background:var(--line); margin-top:7px; overflow:hidden;}
+  .goal-bar span{display:block; height:100%; background:var(--b); border-radius:3px;}
+  .split-off-note{font-size:0.76rem; color:var(--ink-faint); margin-top:12px;}
+  .pct-row{display:flex; gap:8px;}
+  .pct-row .field{flex:1; margin-bottom:0;}
+  .pct-sum{font-size:0.78rem; margin-top:8px; color:var(--ink-faint);}
+  .pct-sum.bad{color:var(--rust); font-weight:700;}
+  .toggle-line{display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; margin-bottom:14px;}
+  .toggle-line input{width:18px; height:18px; accent-color:var(--pine);}
+  .toggle-line label{font-size:0.88rem; font-weight:600; color:var(--ink); text-transform:none; letter-spacing:0;}
+
+  .stub-actions{display:flex; gap:8px; flex-wrap:wrap; margin-top:16px;}
+  .btn{
+    border:1px solid var(--line-strong); background:var(--surface); color:var(--ink);
+    padding:9px 14px; border-radius:8px; font-weight:700; font-size:0.85rem;
+  }
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.ghost{background:transparent;}
+  .btn.rust{color:var(--rust); border-color:var(--rust);}
+  .btn.small{padding:6px 10px; font-size:0.78rem; border-radius:7px;}
+  .btn[disabled]{opacity:0.45; cursor:not-allowed;}
+
+  /* ---------- punch card ---------- */
+  .punch-wrap{overflow-x:auto;}
+  table.punch{border-collapse:collapse; width:100%; min-width:480px;}
+  table.punch th{
+    font-family:'Space Mono'; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+    color:var(--ink-faint); padding:0 6px 10px; text-align:center; font-weight:700;
+  }
+  table.punch th.chore-h{text-align:left; padding-left:2px;}
+  table.punch td{padding:9px 6px; text-align:center; border-top:1px dashed var(--line);}
+  .chore-cell{display:flex; align-items:center; gap:10px; text-align:left;}
+  .chore-emoji{font-size:1.2rem; flex:none;}
+  .chore-title{font-weight:600; font-size:0.92rem;}
+  .chore-value{font-family:'Space Mono'; font-size:0.76rem; color:var(--ink-faint);}
+  .punch-btn{
+    width:30px; height:30px; border-radius:50%; border:2px solid var(--line-strong); background:var(--surface-2);
+    position:relative; padding:0;
+  }
+  .punch-btn.checked{background:var(--pine); border-color:var(--pine);}
+  .punch-btn.checked::after{
+    content:"✓"; color:#fff; font-size:0.85rem; font-weight:700; position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .punch-btn.off{opacity:0.25; border-style:dashed;}
+  .punch-btn.waiting{background:var(--accent); border-color:var(--accent);}
+  .punch-btn.waiting::after{content:"⏳"; font-size:0.7rem;}
+  .punch-btn.checked.duty{background:var(--ink-faint); border-color:var(--ink-faint);}
+
+  .stub-pending{color:var(--accent); font-weight:700;}
+  .streak{
+    margin-top:14px; padding:9px 13px; border-radius:9px; background:var(--pine-soft);
+    color:var(--pine); font-size:0.85rem; font-weight:600; display:inline-block;
+  }
+
+  /* ---------- approval queue ---------- */
+  .approve-card{border-color:var(--accent); border-width:2px;}
+
+  /* ---------- leaderboard ---------- */
+  .board{display:flex; flex-direction:column; gap:10px;}
+  .board-row{display:flex; align-items:center; gap:12px;}
+  .board-name{font-weight:700; font-size:0.9rem; flex:none; min-width:90px;}
+  .board-track{flex:1; height:14px; background:var(--surface-2); border-radius:7px; overflow:hidden; border:1px solid var(--line);}
+  .board-track span{display:block; height:100%; background:var(--pine); border-radius:7px;}
+  .board-amt{font-family:'Space Mono', monospace; font-weight:700; font-size:0.9rem; flex:none;}
+
+  /* ---------- kitchen display ---------- */
+  .display{padding:24px 0 40px;}
+  .display-top{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:26px;}
+  .display-top h1{font-size:clamp(1.6rem,4vw,2.4rem);}
+  .display-date{font-family:'Space Mono', monospace; color:var(--ink-faint); font-size:0.95rem; margin-top:4px;}
+  .display-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:18px;}
+  .display-card{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:22px; box-shadow:var(--shadow);
+  }
+  .display-name{font-family:'Zilla Slab', Georgia, serif; font-weight:700; font-size:clamp(1.3rem,3vw,1.7rem);}
+  .display-bal{
+    font-family:'Space Mono', monospace; font-weight:700; color:var(--pine);
+    font-size:clamp(2.2rem,6vw,3rem); line-height:1.1; margin:4px 0;
+  }
+  .display-streak{color:var(--accent-ink); font-weight:700; font-size:0.95rem; margin-bottom:10px;}
+  .display-left-h{font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--ink-faint); font-weight:700; margin:14px 0 6px;}
+  .display-chore{font-size:1.05rem; padding:4px 0; font-weight:600;}
+  .display-done{color:var(--pine); font-weight:700; font-size:1.1rem; margin-top:14px;}
+  .display-owed{
+    margin-top:14px; padding:8px 12px; background:var(--accent-soft); color:var(--accent-ink);
+    border-radius:8px; font-size:0.86rem; font-weight:700;
+  }
+  .punch-btn:not(.off):active{transform:scale(0.9);}
+  .punch-total{font-family:'Space Mono'; font-weight:700; color:var(--pine);}
+  .row-actions{display:flex; gap:4px; justify-content:flex-end;}
+  .icon-btn{
+    border:none; background:transparent; color:var(--ink-faint); font-size:0.85rem; padding:4px 6px; border-radius:6px;
+  }
+  .icon-btn:hover{background:var(--surface-2); color:var(--ink);}
+  .empty-note{color:var(--ink-faint); font-size:0.88rem; padding:6px 2px;}
+
+  /* ---------- ledger log ---------- */
+  .log-list{display:flex; flex-direction:column;}
+  .log-row{
+    display:flex; align-items:center; gap:12px; padding:10px 2px; border-top:1px dashed var(--line);
+  }
+  .log-row:first-child{border-top:none;}
+  .log-icon{width:30px; height:30px; border-radius:8px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:0.95rem; flex:none;}
+  .log-main{flex:1; min-width:0;}
+  .log-title{font-weight:600; font-size:0.9rem;}
+  .log-date{color:var(--ink-faint); font-size:0.76rem;}
+  .log-amt{font-family:'Space Mono'; font-weight:700; font-variant-numeric:tabular-nums; white-space:nowrap;}
+  .log-amt.credit{color:var(--pine);}
+  .log-amt.debit{color:var(--rust);}
+
+  /* ---------- manage ---------- */
+  .manage-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  @media (max-width:520px){.manage-grid{grid-template-columns:1fr;}}
+  .manage-item{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:10px 12px; background:var(--surface-2); border-radius:9px; border:1px solid var(--line);}
+  .manage-item .mi-label{font-weight:600; font-size:0.88rem; display:flex; align-items:center; gap:8px;}
+
+  /* ---------- as-needed jobs ---------- */
+  .task-list{display:flex; flex-direction:column;}
+  .task-row{
+    display:flex; align-items:center; gap:12px; padding:11px 2px;
+    border-top:1px dashed var(--line); flex-wrap:wrap;
+  }
+  .task-row:first-child{border-top:none;}
+  .task-emoji{font-size:1.35rem; flex:none;}
+  .task-main{flex:1; min-width:150px;}
+  .task-title{font-weight:600; font-size:0.95rem;}
+  .task-sub{font-size:0.76rem; color:var(--ink-faint); margin-top:1px;}
+  .task-sub strong{color:var(--pine);}
+  .task-actions{display:flex; align-items:center; gap:6px; flex:none;}
+
+  /* ---------- prizes owed ---------- */
+  .owed-list{display:flex; flex-direction:column;}
+  .owed-row{
+    display:flex; align-items:center; gap:12px; padding:11px 12px; margin-top:8px;
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:10px;
+  }
+  .owed-row:first-child{margin-top:0;}
+  .owed-emoji{font-size:1.6rem; flex:none;}
+  .owed-main{flex:1; min-width:0;}
+  .owed-label{font-family:'Zilla Slab', Georgia, serif; font-weight:700; font-size:1.02rem; color:var(--accent-ink);}
+  .owed-sub{font-size:0.74rem; color:var(--accent-ink); opacity:0.75;}
+  .owed-wait{font-size:0.72rem; color:var(--accent-ink); opacity:0.7; font-weight:700; text-align:right; flex:none; max-width:90px;}
+  .collected{margin-top:14px;}
+  .collected summary{
+    cursor:pointer; font-size:0.8rem; color:var(--ink-faint); font-weight:700;
+    list-style:none; display:flex; align-items:center; gap:6px;
+  }
+  .collected summary::-webkit-details-marker{display:none;}
+  .collected summary::before{content:"▸"; transition:transform .15s ease;}
+  .collected[open] summary::before{transform:rotate(90deg);}
+  .collected-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:7px 2px; border-top:1px dashed var(--line); font-size:0.86rem; color:var(--ink-soft);
+  }
+
+  /* ---------- big job wheel ---------- */
+  .wheel-lane{display:flex; gap:22px; align-items:center; flex-wrap:wrap;}
+  .wheel-stage{position:relative; width:min(330px, 82vw); flex:none; margin:0 auto;}
+  .wheel-stage canvas{display:block; width:100%; aspect-ratio:1/1; max-width:100%; border-radius:50%;}
+  .wheel-stage.dim canvas{opacity:0.45; filter:saturate(0.5);}
+  .wheel-pointer{
+    position:absolute; top:-4px; left:50%; transform:translateX(-50%); z-index:2;
+    width:0; height:0; border-left:11px solid transparent; border-right:11px solid transparent;
+    border-top:20px solid var(--ink); filter:drop-shadow(0 1px 1px rgba(0,0,0,0.25));
+  }
+  .wheel-side{flex:1; min-width:210px;}
+  .wheel-side h3{font-family:'Zilla Slab'; font-size:1.05rem; margin-bottom:6px;}
+  .wheel-side p{color:var(--ink-soft); font-size:0.88rem; margin:0 0 14px;}
+  .wheel-label{
+    display:inline-block; font-family:'Space Mono'; font-size:0.7rem; letter-spacing:0.14em;
+    text-transform:uppercase; color:var(--ink-faint); font-weight:700; margin-bottom:10px;
+  }
+  .quest{
+    display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:12px;
+    background:var(--surface-2); border:1px dashed var(--line-strong);
+  }
+  .quest-emoji{font-size:1.9rem; flex:none;}
+  .quest-title{font-family:'Zilla Slab'; font-weight:700; font-size:1.1rem; line-height:1.2;}
+  .quest-sub{font-size:0.8rem; color:var(--ink-faint);}
+  .prize-card{
+    text-align:center; padding:20px 16px; border-radius:12px;
+    background:var(--accent-soft); border:2px solid var(--accent);
+    animation:prize-in .4s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes prize-in{ from{ transform:scale(0.86); opacity:0; } to{ transform:scale(1); opacity:1; } }
+  .prize-emoji{font-size:2.6rem; line-height:1;}
+  .prize-label{font-family:'Zilla Slab'; font-weight:700; font-size:1.25rem; margin:6px 0 2px; color:var(--accent-ink);}
+  .prize-kicker{font-size:0.76rem; text-transform:uppercase; letter-spacing:0.12em; color:var(--accent-ink); opacity:0.75; font-weight:700;}
+  .spin-note{font-size:0.8rem; color:var(--ink-faint); margin-top:10px;}
+  .pending-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:8px 12px; background:var(--surface-2); border:1px solid var(--line); border-radius:9px; margin-top:8px;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:999px;
+    background:var(--accent-soft); color:var(--accent-ink); font-size:0.78rem; font-weight:700;
+    max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .prize-grid{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px;}
+
+  /* ---------- tips ---------- */
+  .tips summary{cursor:pointer; font-weight:700; font-family:'Zilla Slab'; font-size:1.02rem; list-style:none; display:flex; align-items:center; gap:8px;}
+  .tips summary::-webkit-details-marker{display:none;}
+  .tips summary::before{content:"▸"; color:var(--accent); transition:transform .15s ease;}
+  .tips[open] summary::before{transform:rotate(90deg);}
+  .tip-prompt{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; background:var(--accent-soft);
+    border:1px solid var(--line); border-radius:9px; padding:10px 12px; margin-top:10px; font-size:0.88rem;
+  }
+  .tip-prompt code{font-family:'Space Mono'; font-size:0.82rem; color:var(--accent-ink);}
+  .tips p{color:var(--ink-soft); font-size:0.9rem; margin:10px 0 0;}
+
+  /* ---------- badge ---------- */
+  .demo-badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.74rem; font-weight:700; color:var(--accent-ink);
+    background:var(--accent-soft); padding:4px 10px; border-radius:999px; margin-bottom:14px;
+  }
+
+  /* ---------- modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(20,26,20,0.55); display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:50;
+  }
+  .overlay[hidden]{display:none;}
+  .modal{
+    background:var(--surface); border-radius:16px; padding:22px; max-width:420px; width:100%;
+    max-height:86vh; overflow-y:auto; box-shadow:0 24px 60px -20px rgba(0,0,0,0.45);
+  }
+  .modal h3{font-size:1.15rem; margin-bottom:14px;}
+  .field{display:flex; flex-direction:column; gap:5px; margin-bottom:14px;}
+  .field label{font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-faint);}
+  .field input[type=text], .field input[type=number], .field input[type=password]{
+    border:1px solid var(--line-strong); border-radius:8px; padding:10px 12px; font-size:0.95rem; background:var(--surface-2); color:var(--ink);
+  }
+  .emoji-row{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;}
+  .emoji-pick{border:1px solid var(--line); background:var(--surface-2); border-radius:7px; padding:5px 8px; font-size:1.05rem;}
+  .day-row{display:flex; gap:6px; flex-wrap:wrap;}
+  .day-chip{border:1px solid var(--line-strong); background:var(--surface-2); border-radius:7px; padding:6px 4px; font-size:0.76rem; font-weight:700; width:40px; text-align:center; color:var(--ink-soft);}
+  .day-chip input{display:none;}
+  .day-chip:has(input:checked){background:var(--pine); border-color:var(--pine); color:#fff;}
+  .modal-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:16px;}
+  .modal-note{font-size:0.82rem; color:var(--ink-faint); margin-top:-6px; margin-bottom:14px;}
+  .pin-dots{display:flex; gap:10px; justify-content:center; margin:18px 0;}
+  .pin-dots input{
+    width:46px; height:54px; text-align:center; font-size:1.4rem; font-family:'Space Mono';
+    border:1px solid var(--line-strong); border-radius:9px; background:var(--surface-2); color:var(--ink);
+  }
+  .pin-error{color:var(--rust); font-size:0.85rem; text-align:center; min-height:1.2em;}
+
+  .warn-bar{
+    max-width:760px; margin:14px auto 0; padding:11px 15px;
+    background:var(--rust-soft); border:1px solid var(--rust);
+    border-radius:11px; font-size:0.84rem; color:var(--rust); line-height:1.45;
+  }
+  .warn-bar strong{font-family:'Zilla Slab', Georgia, serif;}
+
+  #fx{position:fixed; inset:0; pointer-events:none; z-index:45;}
+
+  footer{text-align:center; color:var(--ink-faint); font-size:0.78rem; padding:28px 0 0;}
+</style>
+
+<div id="storageWarn"></div>
+
+<div class="wrap" id="app">
+  <div style="padding:60px 0; text-align:center; color:var(--ink-faint); font-family:'Space Mono';">Opening the ledger…</div>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DOW = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var CHORE_EMOJI = ['🧹','🍽️','🛏️','🐕','🚮','🧺','🪟','🌱','📚','🧽','🚗','🧦'];
+  var KID_EMOJI = ['🧑','🧒','👦','👧','🐣','⭐','🦊','🐼'];
+  var ALL_DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var WEEKDAYS = ['Mon','Tue','Wed','Thu','Fri'];
+
+  // A full week to start from — the idea is you delete what doesn't apply,
+  // which is faster than inventing a list from an empty screen.
+  var STARTER_CHORES = [
+    { title:'Make the bed',        emoji:'🛏️', value:1,    days: ALL_DAYS },
+    { title:'Tidy your room',      emoji:'🧦', value:1,    days: ALL_DAYS },
+    { title:'Load the dishwasher', emoji:'🍽️', value:1.5,  days: WEEKDAYS },
+    { title:'Walk the dog',        emoji:'🐕', value:2,    days: ALL_DAYS },
+    { title:'Take out the trash',  emoji:'🚮', value:1.5,  days:['Tue','Fri'] },
+    { title:'Put away laundry',    emoji:'🧺', value:1.5,  days:['Wed','Sun'] },
+    { title:'Homework, no nagging',emoji:'📚', value:1,    days:['Mon','Tue','Wed','Thu'] },
+    { title:'Wipe the bathroom',   emoji:'🧽', value:1.5,  days:['Sat'] },
+    { title:'Sweep the kitchen',   emoji:'🧹', value:1.5,  days:['Sat'] },
+    { title:'Water the plants',    emoji:'🌱', value:1,    days:['Sun'] }
+  ];
+
+  // Jobs with no schedule — done when the situation calls for it, paid each time.
+  var STARTER_TASKS = [
+    { title:'Empty the dishwasher', emoji:'🍽️', value:1,   weeklyCap:7 },
+    { title:'Bring in the cans',    emoji:'🗑️', value:1,   weeklyCap:2 },
+    { title:'Help with groceries',  emoji:'🛒', value:1.5, weeklyCap:3 },
+    { title:'Feed the dog',         emoji:'🐕', value:0.5, weeklyCap:14 }
+  ];
+
+  var db = null;
+  var state = {
+    kids: [], chores: [], logs: [], config: { pin: '1234', familyName: 'Our Family' },
+    bigjobs: [], rewards: [], quests: [], tasks: [], owed: [],
+    ready: { kids:false, chores:false, logs:false, config:false, bigjobs:false, rewards:false, quests:false, tasks:false, owed:false },
+    selectedKidId: null,
+    weekOffset: 0,
+    parentUnlocked: false,
+    tipsOpen: false,
+    spinning: false
+  };
+  var lastBalances = {};
+  var wheelRotation = { job: 0, prize: 0 };
+
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function toISO(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+  function startOfWeek(d){
+    var day = d.getDay();
+    var diff = (day === 0 ? -6 : 1 - day);
+    var m = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    m.setDate(m.getDate() + diff);
+    return m;
+  }
+  function weekDates(offset){
+    var base = startOfWeek(new Date());
+    base.setDate(base.getDate() + offset*7);
+    var out = [];
+    for (var i=0;i<7;i++){ var dd = new Date(base); dd.setDate(base.getDate()+i); out.push(dd); }
+    return out;
+  }
+  function weekLabel(dates){
+    var a = dates[0], b = dates[6];
+    if (a.getMonth() === b.getMonth()) return MONTHS[a.getMonth()] + ' ' + a.getDate() + '–' + b.getDate();
+    return MONTHS[a.getMonth()] + ' ' + a.getDate() + ' – ' + MONTHS[b.getMonth()] + ' ' + b.getDate();
+  }
+  function fmtDate(iso){
+    var p = iso.split('-'); var d = new Date(+p[0], +p[1]-1, +p[2]);
+    return MONTHS[d.getMonth()] + ' ' + d.getDate();
+  }
+  function money(n){
+    var neg = n < 0; n = Math.abs(n);
+    return (neg?'−':'') + '$' + n.toFixed(2);
+  }
+  function esc(s){
+    return String(s==null?'':s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function todayISO(){ return toISO(new Date()); }
+
+  function ready(){
+    return state.ready.kids && state.ready.chores && state.ready.logs && state.ready.config &&
+           state.ready.bigjobs && state.ready.rewards && state.ready.quests &&
+           state.ready.tasks && state.ready.owed;
+  }
+
+  /* ---- approval ---- */
+  function approvalOn(){ return !!state.config.requireApproval; }
+  function isPending(e){ return e.approved === false; }
+  function pendingFor(kidId){
+    return kidLogs(kidId).filter(isPending)
+      .sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  }
+  function allPending(){
+    return state.logs.filter(isPending).sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  }
+
+  /* ---- chore kinds ---- */
+  function paidChores(kidId){ return kidChores(kidId).filter(function(c){ return !c.unpaid; }); }
+  function dutyChores(kidId){ return kidChores(kidId).filter(function(c){ return !!c.unpaid; }); }
+  function openChores(){
+    return state.chores.filter(function(c){ return c.kidId === 'open'; })
+      .sort(function(a,b){ return (a.createdAt||0)-(b.createdAt||0); });
+  }
+
+  /* ---- streaks ---- */
+  // A day counts when every paid chore due that day got ticked. Today doesn't
+  // break a streak just because the day isn't over yet.
+  function choreDueOn(ch, d){
+    return (ch.days||[]).indexOf(DOW[(d.getDay()+6)%7]) !== -1;
+  }
+  function dayComplete(kidId, d){
+    var iso = toISO(d);
+    var due = paidChores(kidId).filter(function(ch){ return choreDueOn(ch, d); });
+    if (!due.length) return null; // nothing due — neither breaks nor extends
+    for (var i=0;i<due.length;i++){
+      if (!logEntry(choreLogId(kidId, due[i].id, iso))) return false;
+    }
+    return true;
+  }
+  function streakFor(kidId){
+    var n = 0;
+    var d = new Date();
+    var todayState = dayComplete(kidId, d);
+    if (todayState !== true) d.setDate(d.getDate()-1); // today still in progress
+    for (var i=0;i<120;i++){
+      var st = dayComplete(kidId, d);
+      if (st === false) break;
+      if (st === true) n++;
+      d.setDate(d.getDate()-1);
+    }
+    return n;
+  }
+
+  /* ---- interest on the Save pot ---- */
+  // No server to run a nightly job, so the page settles up whatever days were
+  // missed since it was last opened. Each day has its own document id, so two
+  // devices opening at once can't pay it twice.
+  function accrueInterest(kid){
+    var rate = Number(kid.interestRate)||0;
+    if (rate <= 0 || !kidSplit(kid).on) return;
+    var today = todayISO();
+    var cursor = kid.lastInterestISO;
+    if (!cursor){
+      db.doc('kids/'+kid.id).update({ lastInterestISO: today });
+      return;
+    }
+    if (cursor >= today) return;
+
+    var parts = cursor.split('-');
+    var d = new Date(+parts[0], +parts[1]-1, +parts[2]);
+    var running = bucketBalance(kid.id, 'save');
+    // A tenner at 12% earns a third of a cent a day. Rounding each day to the
+    // nearest cent would pay nothing forever, so the fraction is carried and
+    // posted once it adds up to a penny — which is what a bank actually does.
+    var carry = Number(kid.interestCarry) || 0;
+    var daily = rate / 100 / 365;
+    var guard = 0;
+
+    while (toISO(d) < today && guard < 400){
+      d.setDate(d.getDate()+1);
+      guard++;
+      var iso = toISO(d);
+      carry += (running + carry) * daily;
+      if (carry < 0.01) continue;
+      var pay = Math.floor(carry * 100) / 100;
+      carry = Math.round((carry - pay) * 10000) / 10000;
+      var id = kid.id + '_interest_' + iso;
+      if (logEntry(id)) continue;
+      running += pay;
+      db.collection('log').doc(id).set({
+        kidId: kid.id, title: 'Interest on savings', amount: pay, type: 'interest',
+        dateISO: iso, ts: Date.now(), split: { spend:0, save:pay, invest:0 }
+      });
+    }
+    db.doc('kids/'+kid.id).update({ lastInterestISO: today, interestCarry: carry });
+  }
+
+  function kidTasks(kidId){
+    return state.tasks.filter(function(t){ return t.kidId === kidId; })
+      .sort(function(a,b){ return (a.createdAt||0)-(b.createdAt||0); });
+  }
+  function taskEntriesThisWeek(kidId, taskId){
+    var dates = weekDates(state.weekOffset);
+    var from = toISO(dates[0]), to = toISO(dates[6]);
+    return kidLogs(kidId).filter(function(l){
+      return l.type === 'task' && l.taskId === taskId && l.dateISO >= from && l.dateISO <= to;
+    }).sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  }
+  function owedFor(kidId){
+    return state.owed.filter(function(o){ return o.kidId === kidId && !o.redeemed; })
+      .sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+  }
+  function usedCount(kidId){
+    return state.owed.filter(function(o){ return o.kidId === kidId && o.redeemed; }).length;
+  }
+
+  function questFor(kidId){
+    var q = state.quests.find(function(x){ return x.id === kidId; });
+    return q || { id: kidId, status: 'idle', lastSpinISO: '' };
+  }
+  function approvedRewards(){ return state.rewards.filter(function(r){ return r.approved; }); }
+  function pendingRewards(){ return state.rewards.filter(function(r){ return !r.approved; }); }
+  function canSpinToday(kidId){
+    var q = questFor(kidId);
+    return q.status === 'idle' && q.lastSpinISO !== todayISO();
+  }
+
+  var BUCKETS = ['spend','save','invest'];
+  var BUCKET_META = {
+    spend:  { label:'Spend',  sub:'spend out of the house' },
+    save:   { label:'Save',   sub:'for something big' },
+    invest: { label:'Invest', sub:'into the market' }
+  };
+
+  function round2(n){ return Math.round(n * 100) / 100; }
+
+  // A kid's split: on by default, even thirds by default, custom percentages if asked for.
+  function kidSplit(kid){
+    var on = !kid || kid.splitEnabled !== false;
+    var mode = (kid && kid.splitMode === 'custom') ? 'custom' : 'even';
+    var s = Number(kid && kid.splitSpend), v = Number(kid && kid.splitSave), i = Number(kid && kid.splitInvest);
+    if (!isFinite(s) || !isFinite(v) || !isFinite(i) || (s + v + i) <= 0){ s = 34; v = 33; i = 33; }
+    var total = s + v + i;
+    return { on: on, mode: mode, spend: s/total, save: v/total, invest: i/total, pct: { spend:s, save:v, invest:i } };
+  }
+
+  // Three even thirds, to the cent. A dollar doesn't divide by three, so the odd cent
+  // rotates between the pots run to run instead of always favoring the same one.
+  function evenSplit(amount, rotation){
+    var cents = Math.round(amount * 100);
+    var sign = cents < 0 ? -1 : 1;
+    var abs = Math.abs(cents);
+    var base = Math.floor(abs / 3);
+    var parts = [base, base, base];
+    for (var k = 0; k < abs - base*3; k++){ parts[((rotation||0) + k) % 3] += 1; }
+    return { spend: sign*parts[0]/100, save: sign*parts[1]/100, invest: sign*parts[2]/100 };
+  }
+
+  function splitRotation(kidId){
+    return kidLogs(kidId).filter(function(e){ return !!e.split; }).length % 3;
+  }
+
+  // Credits are divided the moment they're earned, so changing the split later
+  // never rewrites history.
+  function splitAmount(kid, amount){
+    var sp = kidSplit(kid);
+    if (!sp.on) return null;
+    if (sp.mode === 'even') return evenSplit(amount, splitRotation(kid && kid.id));
+    var spend = round2(amount * sp.spend);
+    var save = round2(amount * sp.save);
+    return { spend: spend, save: save, invest: round2(amount - spend - save) };
+  }
+
+  function entryBuckets(e){
+    if (e.split) return { spend: e.split.spend||0, save: e.split.save||0, invest: e.split.invest||0 };
+    var out = { spend:0, save:0, invest:0 };
+    var b = (e.bucket && BUCKETS.indexOf(e.bucket) !== -1) ? e.bucket : 'spend';
+    out[b] = e.amount || 0;
+    return out;
+  }
+
+  function bucketBalance(kidId, bucket){
+    return kidLogs(kidId).reduce(function(s, e){
+      return e.approved === false ? s : s + entryBuckets(e)[bucket];
+    }, 0);
+  }
+
+  function kidLogs(kidId){ return state.logs.filter(function(l){ return l.kidId === kidId; }); }
+  function kidBalance(kidId){
+    // money awaiting a parent's nod isn't money yet
+    return kidLogs(kidId).reduce(function(sum,l){
+      return l.approved === false ? sum : sum + (l.amount||0);
+    }, 0);
+  }
+  function pendingTotal(kidId){
+    return pendingFor(kidId).reduce(function(s,l){ return s + (l.amount||0); }, 0);
+  }
+  function kidChores(kidId){
+    return state.chores.filter(function(c){ return c.kidId === kidId; })
+      .sort(function(a,b){ return (a.title||'').localeCompare(b.title||''); });
+  }
+  function logEntry(id){ return state.logs.find(function(l){ return l.id === id; }); }
+
+  function choreLogId(kidId, choreId, iso){ return kidId + '_' + choreId + '_' + iso; }
+  function allowanceLogId(kidId, mondayISO){ return kidId + '_allowance_' + mondayISO; }
+
+  /* ---------------- rendering ---------------- */
+
+  function render(){
+    if (state.spinning) return; // never redraw the DOM out from under a spinning wheel
+    var root = document.getElementById('app');
+    if (!db){
+      root.innerHTML = noDbView();
+      return;
+    }
+    if (!ready()){
+      root.innerHTML = '<div style="padding:60px 0; text-align:center; color:var(--ink-faint); font-family:\'Space Mono\';">Opening the ledger…</div>';
+      return;
+    }
+    if (!state.selectedKidId && state.kids.length){
+      state.selectedKidId = state.kids[0].id;
+    }
+    var kid = state.kids.find(function(k){ return k.id === state.selectedKidId; });
+
+    if (state.displayMode){
+      root.innerHTML = displayView();
+      return;
+    }
+
+    var html = '';
+    html += topbar();
+    html += kidTabs();
+    html += '<main>';
+    if (state.kids.length === 0){
+      html += emptyStateCard();
+    } else if (kid) {
+      html += paystub(kid);
+      html += approvalSection();
+      html += punchcard(kid);
+      html += taskSection(kid);
+      html += wheelSection(kid);
+      html += owedSection(kid);
+      html += leaderboard();
+      html += ledgerLog(kid);
+    }
+    if (state.parentUnlocked) html += managePanel();
+    html += tipsPanel();
+    html += '</main>';
+    html += '<footer>Earn It · saved in this browser on this device · back it up from Parent Mode</footer>';
+    root.innerHTML = html;
+
+    // settle up any interest owed since the app was last opened (once per load)
+    if (!state.interestSettled && state.kids.length){
+      state.interestSettled = true;
+      state.kids.forEach(accrueInterest);
+    }
+
+    if (kid) redrawWheel();
+    if (state.openModal === 'wheel' && !document.getElementById('overlay').hidden) modalManageWheel();
+
+    // shower the prize once, the first time a given win is shown
+    if (kid){
+      var rq = questFor(kid.id);
+      if (rq.status === 'revealed'){
+        var key = kid.id + ':' + (rq.spunAt || '') + ':' + (rq.rewardId || rq.rewardLabel || '');
+        if (key !== lastRevealKey){
+          lastRevealKey = key;
+          setTimeout(fxPrizeShower, 120);
+        }
+      }
+    }
+
+    // balance bump animation
+    if (kid){
+      var bal = kidBalance(kid.id);
+      var elBal = document.querySelector('.balance-num');
+      if (elBal && lastBalances[kid.id] !== undefined && lastBalances[kid.id] !== bal){
+        elBal.classList.add('bump');
+        setTimeout(function(){ elBal.classList.remove('bump'); }, 260);
+      }
+      lastBalances[kid.id] = bal;
+    }
+  }
+
+  /* ---------------- kitchen display ---------------- */
+  // Big, read-only, meant for a tablet propped on the counter.
+
+  function displayView(){
+    var today = new Date();
+    var iso = toISO(today);
+    var dow = DOW[(today.getDay()+6)%7];
+
+    var html = '<div class="display">' +
+      '<div class="display-top">' +
+        '<div><h1>' + esc(state.config.familyName || 'Our Family') + '</h1>' +
+        '<div class="display-date">' + dow + ', ' + MONTHS[today.getMonth()] + ' ' + today.getDate() + '</div></div>' +
+        '<button class="pill-btn" data-action="exit-display">Exit</button>' +
+      '</div><div class="display-grid">';
+
+    state.kids.forEach(function(k){
+      var due = paidChores(k.id).concat(dutyChores(k.id)).filter(function(ch){ return choreDueOn(ch, today); });
+      var left = due.filter(function(ch){ return !logEntry(choreLogId(k.id, ch.id, iso)); });
+      var streak = streakFor(k.id);
+      var owed = owedFor(k.id);
+
+      html += '<div class="display-card">' +
+        '<div class="display-name">' + esc(k.emoji||'🧒') + ' ' + esc(k.name) + '</div>' +
+        '<div class="display-bal">' + money(kidBalance(k.id)) + '</div>' +
+        (streak ? '<div class="display-streak">🔥 ' + streak + ' day streak</div>' : '') +
+        '<div class="display-left">' +
+          (left.length
+            ? '<div class="display-left-h">Still to do today</div>' +
+              left.map(function(ch){ return '<div class="display-chore">' + esc(ch.emoji||'⭐') + ' ' + esc(ch.title) + '</div>'; }).join('')
+            : '<div class="display-done">✓ All done today</div>') +
+        '</div>' +
+        (owed.length ? '<div class="display-owed">🎁 owed: ' + esc(owed[0].label) +
+          (owed.length>1 ? ' +' + (owed.length-1) + ' more' : '') + '</div>' : '') +
+      '</div>';
+    });
+
+    html += '</div></div>';
+    return html;
+  }
+
+  function noDbView(){
+    return '<div style="padding:70px 0; text-align:center;">' +
+      '<h2 style="margin-bottom:10px;">Earn It needs its live page</h2>' +
+      '<p style="color:var(--ink-soft); max-width:38ch; margin:0 auto;">This ledger saves everyone’s chores and balances live. Open it from its published claude.ai link to use it.</p>' +
+      '</div>';
+  }
+
+  function topbar(){
+    return '' +
+      '<header class="topbar">' +
+        '<div class="brand">' +
+          '<div class="brand-mark">✦</div>' +
+          '<div><h1>Earn It</h1><small>' + esc(state.config.familyName || 'Our Family') + '’s chore ledger</small></div>' +
+        '</div>' +
+        '<div class="topbar-actions">' +
+          '<button class="pill-btn" data-action="enter-display" title="Kitchen display">🖥</button>' +
+          '<button class="pill-btn" data-action="week-prev">‹</button>' +
+          '<span class="pill-btn" style="cursor:default;">' + weekLabel(weekDates(state.weekOffset)) + (state.weekOffset===0?'':' ') + '</span>' +
+          '<button class="pill-btn" data-action="week-next">›</button>' +
+          '<button class="pill-btn ' + (state.parentUnlocked?'on':'') + '" data-action="toggle-parent">' + (state.parentUnlocked ? '🔓 Parent Mode' : '🔒 Parent Mode') + '</button>' +
+        '</div>' +
+      '</header>';
+  }
+
+  function kidTabs(){
+    var html = '<nav class="kidtabs">';
+    state.kids.forEach(function(k){
+      html += '<button class="tab ' + (k.id===state.selectedKidId?'active':'') + '" data-action="select-kid" data-id="' + k.id + '">' +
+        '<span class="tab-emoji">' + esc(k.emoji||'🧒') + '</span>' + esc(k.name) + '</button>';
+    });
+    if (state.parentUnlocked){
+      html += '<button class="tab add" data-action="open-add-kid">+ Add kid</button>';
+    }
+    html += '</nav>';
+    return html;
+  }
+
+  function emptyStateCard(){
+    return '<div class="card" style="text-align:center; padding:40px 20px;">' +
+      '<h2 style="margin-bottom:8px;">No kids on the ledger yet</h2>' +
+      '<p style="color:var(--ink-soft); margin-bottom:16px;">Turn on Parent Mode to add your first kid and their chores.</p>' +
+      '<button class="btn primary" data-action="toggle-parent">🔒 Turn on Parent Mode</button>' +
+      '</div>';
+  }
+
+  function paystub(kid){
+    var bal = kidBalance(kid.id);
+    var dates = weekDates(state.weekOffset);
+    var weekSum = kidLogs(kid.id).filter(function(l){
+      return l.dateISO >= toISO(dates[0]) && l.dateISO <= toISO(dates[6]) && l.type !== 'payout';
+    }).reduce(function(s,l){ return s + l.amount; }, 0);
+
+    var mondayISO = toISO(startOfWeek(new Date()));
+    var allowanceLogged = !!logEntry(allowanceLogId(kid.id, mondayISO));
+    var showAllowanceBtn = state.parentUnlocked && state.weekOffset===0 && (kid.baseAllowance||0) > 0;
+
+    var sp = kidSplit(kid);
+
+    var html = '<section class="card paystub">' +
+      '<div class="stub-row">' +
+        '<div><div class="balance-label">' + esc(kid.name) + '’s balance</div>' +
+        '<div class="balance-num">' + money(bal) + '</div></div>' +
+        '<div class="stub-side">' +
+          '<div>this week: <strong>' + money(weekSum) + '</strong></div>' +
+          (kid.baseAllowance ? '<div>base allowance: ' + money(kid.baseAllowance) + '/wk</div>' : '') +
+          (pendingTotal(kid.id) ? '<div class="stub-pending">' + money(pendingTotal(kid.id)) + ' awaiting a parent</div>' : '') +
+        '</div>' +
+      '</div>' +
+      (function(){
+        var s = streakFor(kid.id);
+        if (!s) return '';
+        return '<div class="streak">🔥 <strong>' + s + '</strong> day' + (s === 1 ? '' : 's') +
+               ' running — every chore done</div>';
+      })();
+
+    if (sp.on){
+      html += '<div class="buckets">';
+      BUCKETS.forEach(function(b){
+        var amt = bucketBalance(kid.id, b);
+        var share = sp.mode === 'even'
+          ? 'even third'
+          : Math.round(sp.pct[b] / (sp.pct.spend+sp.pct.save+sp.pct.invest) * 100) + '%';
+        var sub = BUCKET_META[b].sub + ' · ' + share;
+        var extra = '';
+
+        if (b === 'save' && kid.goalAmount > 0){
+          var pctDone = Math.max(0, Math.min(1, amt / kid.goalAmount));
+          sub = esc(kid.goalLabel || 'Savings goal') + ' · ' + money(kid.goalAmount);
+          extra = '<div class="goal-bar"><span style="width:' + (pctDone*100).toFixed(1) + '%"></span></div>';
+        }
+        if (b === 'save' && !(kid.goalAmount > 0) && kid.interestRate > 0){
+          sub = 'earning <strong>' + kid.interestRate + '%</strong> a year';
+        }
+        if (b === 'save' && kid.goalAmount > 0 && kid.interestRate > 0){
+          extra += '<div class="bucket-sub" style="margin-top:5px;">earning <strong>' + kid.interestRate + '%</strong> a year</div>';
+        }
+        if (b === 'invest' && typeof kid.investValue === 'number' && amt > 0){
+          var diff = round2(kid.investValue - amt);
+          sub = 'worth <strong>' + money(kid.investValue) + '</strong> ' +
+            '<span class="' + (diff >= 0 ? 'up' : 'down') + '">' + (diff >= 0 ? '+' : '') + money(diff) + '</span>';
+        }
+
+        html += '<div class="bucket" style="--b: var(--' + b + ')">' +
+          '<div class="bucket-label">' + BUCKET_META[b].label + '</div>' +
+          '<div class="bucket-amt">' + money(amt) + '</div>' +
+          '<div class="bucket-sub">' + sub + '</div>' + extra +
+        '</div>';
+      });
+      html += '</div>';
+    } else if (state.parentUnlocked){
+      html += '<div class="split-off-note">Three-way split is off for ' + esc(kid.name) + ' — everything lands in one balance. Turn it on in Edit kid.</div>';
+    }
+
+    if (state.parentUnlocked){
+      html += '<div class="stub-actions">' +
+        '<button class="btn small" data-action="open-bonus" data-kid="' + kid.id + '">+ Bonus</button>' +
+        '<button class="btn small rust" data-action="open-deduction" data-kid="' + kid.id + '">− Deduction</button>' +
+        '<button class="btn small" data-action="open-payout" data-kid="' + kid.id + '" ' + (bal<=0?'disabled':'') + '>$ Record payout</button>' +
+        (sp.on ? '<button class="btn small" data-action="open-invest-value" data-kid="' + kid.id + '">📈 Update invest value</button>' : '') +
+        (showAllowanceBtn ? '<button class="btn small primary" data-action="add-allowance" data-kid="' + kid.id + '" ' + (allowanceLogged?'disabled':'') + '>' + (allowanceLogged ? '✓ Allowance added' : '+ Add this week’s allowance (' + money(kid.baseAllowance) + ')') + '</button>' : '') +
+        '</div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  function punchcard(kid){
+    return choreTable(kid, paidChores(kid.id), 'This week’s chores', 'paid') +
+           (dutyChores(kid.id).length ? choreTable(kid, dutyChores(kid.id), 'Because you live here', 'duty') : '') +
+           openChoresSection(kid);
+  }
+
+  function choreTable(kid, chores, heading, kind){
+    var dates = weekDates(state.weekOffset);
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>' + heading + '</h2>' +
+      (kind === 'duty'
+        ? '<span class="eyebrow">no pay · just your share</span>'
+        : (state.parentUnlocked ? '<button class="btn small" data-action="open-add-chore" data-kid="' + kid.id + '">+ Add chore</button>' : '')) +
+      '</div>';
+
+    if (chores.length === 0){
+      html += '<div class="empty-note">No chores assigned yet.' + (state.parentUnlocked ? '' : ' Ask a parent to add some in Parent Mode.') + '</div>';
+    } else {
+      html += '<div class="punch-wrap"><table class="punch"><thead><tr><th class="chore-h">Chore</th>';
+      dates.forEach(function(d){ html += '<th>' + DOW[(d.getDay()+6)%7] + '<br>' + d.getDate() + '</th>'; });
+      html += '<th>' + (kind === 'duty' ? 'Done' : 'Earned') + '</th>' + (state.parentUnlocked ? '<th></th>' : '') + '</tr></thead><tbody>';
+
+      chores.forEach(function(ch){
+        var rowTotal = 0, rowDone = 0;
+        html += '<tr><td><div class="chore-cell"><span class="chore-emoji">' + esc(ch.emoji||'⭐') + '</span>' +
+          '<div><div class="chore-title">' + esc(ch.title) + '</div><div class="chore-value">' +
+          (kind === 'duty' ? 'no pay' : money(ch.value)) + '</div></div></div></td>';
+        dates.forEach(function(d){
+          var iso = toISO(d);
+          var dow = DOW[(d.getDay()+6)%7];
+          var applies = (ch.days||[]).indexOf(dow) !== -1;
+          var id = choreLogId(kid.id, ch.id, iso);
+          var entry = logEntry(id);
+          var checked = !!entry;
+          var waiting = checked && isPending(entry);
+          if (checked){ rowTotal += ch.value; rowDone++; }
+          if (!applies){
+            html += '<td><button class="punch-btn off" disabled></button></td>';
+          } else {
+            html += '<td><button class="punch-btn ' + (checked?'checked':'') + (waiting?' waiting':'') + (kind==='duty'?' duty':'') +
+              '" data-action="toggle-chore" data-kid="' + kid.id + '" data-chore="' + ch.id + '" data-date="' + iso +
+              '" title="' + (waiting ? 'waiting on a parent' : '') + '" aria-label="' + esc(ch.title) + ' on ' + iso + '"></button></td>';
+          }
+        });
+        html += '<td class="punch-total">' + (kind === 'duty' ? rowDone + '/7' : money(rowTotal)) + '</td>';
+        if (state.parentUnlocked){
+          html += '<td class="row-actions">' +
+            '<button class="icon-btn" data-action="open-edit-chore" data-id="' + ch.id + '" title="Edit">✎</button>' +
+            '<button class="icon-btn" data-action="delete-chore" data-id="' + ch.id + '" data-confirm="0" title="Delete">🗑</button>' +
+          '</td>';
+        }
+        html += '</tr>';
+      });
+      html += '</tbody></table></div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  /* ---------------- up for grabs ---------------- */
+
+  function openChoresSection(kid){
+    var open = openChores();
+    if (!open.length && !state.parentUnlocked) return '';
+    var dates = weekDates(state.weekOffset);
+    var from = toISO(dates[0]), to = toISO(dates[6]);
+
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>Up for grabs</h2>' +
+      '<span class="eyebrow">unassigned · first to claim it earns it</span></div>';
+
+    if (!open.length){
+      html += '<div class="empty-note">Nothing up for grabs. Add a chore and set it to “anyone can claim” — handy for the jobs nobody owns.</div>';
+    } else {
+      html += '<div class="task-list">';
+      open.forEach(function(ch){
+        // who took it this week, if anyone
+        var taken = state.logs.filter(function(l){
+          return l.choreId === ch.id && l.dateISO >= from && l.dateISO <= to;
+        }).sort(function(a,b){ return (b.ts||0)-(a.ts||0); });
+
+        html += '<div class="task-row">' +
+          '<span class="task-emoji">' + esc(ch.emoji||'🙋') + '</span>' +
+          '<div class="task-main">' +
+            '<div class="task-title">' + esc(ch.title) + '</div>' +
+            '<div class="task-sub">' + money(ch.value) + (taken.length
+              ? ' · taken by <strong>' + esc(kidName(taken[0].kidId)) + '</strong> ' + fmtDate(taken[0].dateISO)
+              : ' · nobody has claimed it') + '</div>' +
+          '</div>' +
+          '<div class="task-actions">' +
+            (taken.length
+              ? (state.parentUnlocked ? '<button class="icon-btn" data-action="unclaim-open" data-id="' + taken[0].id + '" data-confirm="0" title="Put it back">↶</button>' : '')
+              : '<button class="btn small primary" data-action="claim-open" data-kid="' + kid.id + '" data-chore="' + ch.id + '">' + esc(kid.name) + ' claims it</button>') +
+            (state.parentUnlocked ?
+              '<button class="icon-btn" data-action="open-edit-chore" data-id="' + ch.id + '">✎</button>' +
+              '<button class="icon-btn" data-action="delete-chore" data-id="' + ch.id + '" data-confirm="0">🗑</button>' : '') +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+    if (state.parentUnlocked){
+      html += '<div style="margin-top:14px;"><button class="btn small" data-action="open-add-open-chore">+ Put a job up for grabs</button></div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  function kidName(id){
+    var k = state.kids.find(function(x){ return x.id === id; });
+    return k ? k.name : 'someone';
+  }
+
+  /* ---------------- approval queue ---------------- */
+
+  function approvalSection(){
+    if (!approvalOn()) return '';
+    var pend = allPending();
+    if (!pend.length && !state.parentUnlocked) return '';
+
+    var html = '<section class="card approve-card">' +
+      '<div class="card-head"><h2>Waiting on you</h2>' +
+      '<span class="eyebrow">' + (pend.length ? pend.length + ' to check' : 'all clear') + '</span></div>';
+
+    if (!pend.length){
+      html += '<div class="empty-note">Nothing waiting. Ticked chores land here before the money counts.</div>';
+    } else if (!state.parentUnlocked){
+      html += '<div class="empty-note">' + pend.length + ' ticked job' + (pend.length>1?'s':'') +
+        ' waiting for a parent to check. The money counts once they do.</div>';
+    } else {
+      html += '<div class="log-list">';
+      pend.slice(0, 20).forEach(function(l){
+        html += '<div class="log-row">' +
+          '<div class="log-icon">⏳</div>' +
+          '<div class="log-main"><div class="log-title">' + esc(l.title) + '</div>' +
+          '<div class="log-date">' + esc(kidName(l.kidId)) + ' · ' + fmtDate(l.dateISO) + '</div></div>' +
+          '<div class="log-amt credit">+' + money(l.amount) + '</div>' +
+          '<button class="btn small primary" data-action="approve-entry" data-id="' + l.id + '">✓</button>' +
+          '<button class="icon-btn" data-action="reject-entry" data-id="' + l.id + '" data-confirm="0" title="Didn’t happen">✕</button>' +
+        '</div>';
+      });
+      html += '</div>';
+      if (pend.length > 1){
+        html += '<div style="margin-top:14px;"><button class="btn small" data-action="approve-all">✓ Approve all ' + pend.length + '</button></div>';
+      }
+    }
+    html += '</section>';
+    return html;
+  }
+
+  /* ---------------- leaderboard ---------------- */
+
+  function leaderboard(){
+    if (!state.config.showLeaderboard || state.kids.length < 2) return '';
+    var dates = weekDates(state.weekOffset);
+    var from = toISO(dates[0]), to = toISO(dates[6]);
+    var rows = state.kids.map(function(k){
+      var sum = kidLogs(k.id).filter(function(l){
+        return l.dateISO >= from && l.dateISO <= to && l.amount > 0 && l.approved !== false;
+      }).reduce(function(s,l){ return s + l.amount; }, 0);
+      return { kid: k, sum: sum };
+    }).sort(function(a,b){ return b.sum - a.sum; });
+    var top = rows[0].sum || 1;
+
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>This week, side by side</h2><span class="eyebrow">' + weekLabel(dates) + '</span></div>' +
+      '<div class="board">';
+    rows.forEach(function(r){
+      html += '<div class="board-row">' +
+        '<span class="board-name">' + esc(r.kid.emoji||'🧒') + ' ' + esc(r.kid.name) + '</span>' +
+        '<div class="board-track"><span style="width:' + Math.max(3, (r.sum/top)*100).toFixed(1) + '%"></span></div>' +
+        '<span class="board-amt">' + money(r.sum) + '</span>' +
+      '</div>';
+    });
+    html += '</div></section>';
+    return html;
+  }
+
+  /* ---------------- as-needed jobs ---------------- */
+
+  function taskSection(kid){
+    var tasks = kidTasks(kid.id);
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>When it needs doing</h2>' +
+      '<span class="eyebrow">no schedule · paid each time</span></div>';
+
+    if (!tasks.length){
+      html += '<div class="empty-note">Nothing here yet. These are the jobs with no day attached — emptying the dishwasher, bringing in the cans — done whenever they need doing.' +
+        (state.parentUnlocked ? '' : ' Ask a parent to add some.') + '</div>';
+    } else {
+      html += '<div class="task-list">';
+      tasks.forEach(function(t){
+        var entries = taskEntriesThisWeek(kid.id, t.id);
+        var n = entries.length;
+        var earned = entries.reduce(function(s,e){ return s + (e.amount||0); }, 0);
+        var cap = t.weeklyCap || 0;
+        var capped = cap > 0 && n >= cap;
+        html += '<div class="task-row">' +
+          '<span class="task-emoji">' + esc(t.emoji||'✅') + '</span>' +
+          '<div class="task-main">' +
+            '<div class="task-title">' + esc(t.title) + '</div>' +
+            '<div class="task-sub">' + money(t.value) + ' each' +
+              (n ? ' · <strong>' + n + '×</strong> this week · ' + money(earned) : '') +
+              (cap ? ' · max ' + cap + '/wk' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="task-actions">' +
+            (n ? '<button class="icon-btn" data-action="undo-task" data-kid="' + kid.id + '" data-task="' + t.id + '" title="Undo the last one">↶</button>' : '') +
+            '<button class="btn small ' + (capped ? '' : 'primary') + '" data-action="did-task" data-kid="' + kid.id + '" data-task="' + t.id + '" ' + (capped ? 'disabled' : '') + '>' +
+              (capped ? 'Maxed out' : 'Did it') + '</button>' +
+            (state.parentUnlocked ?
+              '<button class="icon-btn" data-action="open-edit-task" data-id="' + t.id + '">✎</button>' +
+              '<button class="icon-btn" data-action="delete-task" data-id="' + t.id + '" data-confirm="0">🗑</button>' : '') +
+          '</div>' +
+        '</div>';
+      });
+      html += '</div>';
+    }
+
+    if (state.parentUnlocked){
+      html += '<div style="margin-top:14px;"><button class="btn small" data-action="open-add-task" data-kid="' + kid.id + '">+ Add an as-needed job</button></div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  /* ---------------- prizes owed ---------------- */
+
+  function owedSection(kid){
+    var owed = owedFor(kid.id);
+    var used = state.owed.filter(function(o){ return o.kidId === kid.id && o.redeemed; })
+      .sort(function(a,b){ return (b.redeemedOn || b.dateISO || '').localeCompare(a.redeemedOn || a.dateISO || ''); });
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>Prizes owed to ' + esc(kid.name) + '</h2>' +
+      '<span class="eyebrow">' + (owed.length ? owed.length + ' waiting' : 'all settled') + '</span></div>';
+
+    if (!owed.length){
+      html += '<div class="empty-note">Nothing owed right now. Win one on the big job wheel and it waits here until you get it.</div>';
+    } else {
+      html += '<div class="owed-list">';
+      owed.forEach(function(o){
+        html += '<div class="owed-row">' +
+          '<span class="owed-emoji">' + esc(o.emoji||'🎁') + '</span>' +
+          '<div class="owed-main">' +
+            '<div class="owed-label">' + esc(o.label) + '</div>' +
+            '<div class="owed-sub">won ' + fmtDate(o.dateISO || todayISO()) +
+              (o.jobTitle ? ' for ' + esc(o.jobTitle) : '') + '</div>' +
+          '</div>' +
+          (state.parentUnlocked
+            ? '<button class="btn small" data-action="redeem-prize" data-id="' + o.id + '">Got it</button>'
+            : '<span class="owed-wait">a parent clears this</span>') +
+        '</div>';
+      });
+      html += '</div>';
+    }
+    if (used.length){
+      html += '<details class="collected"><summary>' + used.length + ' prize' + (used.length>1?'s':'') + ' already collected</summary>';
+      used.forEach(function(o){
+        html += '<div class="collected-row">' +
+          '<span>' + esc(o.emoji||'🎁') + ' ' + esc(o.label) + '</span>' +
+          '<span class="log-date">' + fmtDate(o.redeemedOn || o.dateISO || todayISO()) + '</span>' +
+        '</div>';
+      });
+      html += '</details>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  /* ---------------- sparkles ---------------- */
+
+  var fx = { canvas:null, ctx:null, parts:[], running:false, dpr:1 };
+  var lastRevealKey = null;
+
+  function fxReady(){
+    if (prefersReducedMotion()) return false;
+    if (fx.canvas) return true;
+    var c = document.createElement('canvas');
+    c.id = 'fx';
+    c.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(c);
+    fx.canvas = c;
+    fx.ctx = c.getContext('2d');
+    fxResize();
+    window.addEventListener('resize', fxResize);
+    return true;
+  }
+
+  function fxResize(){
+    if (!fx.canvas) return;
+    fx.dpr = window.devicePixelRatio || 1;
+    fx.canvas.width = Math.round(window.innerWidth * fx.dpr);
+    fx.canvas.height = Math.round(window.innerHeight * fx.dpr);
+    fx.canvas.style.width = window.innerWidth + 'px';
+    fx.canvas.style.height = window.innerHeight + 'px';
+  }
+
+  function sparkleColors(){
+    var cs = getComputedStyle(document.documentElement);
+    return [
+      cs.getPropertyValue('--accent').trim() || '#bf7326',
+      cs.getPropertyValue('--pine').trim() || '#2f6a3d',
+      '#ffd98a',
+      '#ffffff'
+    ];
+  }
+
+  function starPath(ctx, r, points){
+    var step = Math.PI / points;
+    ctx.beginPath();
+    for (var i = 0; i < points*2; i++){
+      var rad = (i % 2 === 0) ? r : r * 0.34;
+      var a = i * step - Math.PI/2;
+      ctx[i === 0 ? 'moveTo' : 'lineTo'](Math.cos(a)*rad, Math.sin(a)*rad);
+    }
+    ctx.closePath();
+  }
+
+  function fxEmit(x, y, count, opts){
+    if (!fxReady()) return;
+    opts = opts || {};
+    var colors = sparkleColors();
+    var spread = opts.spread === undefined ? Math.PI*2 : opts.spread;
+    var dir = opts.dir === undefined ? -Math.PI/2 : opts.dir;
+    var speed = opts.speed || 3;
+    for (var i = 0; i < count; i++){
+      if (fx.parts.length > 300) break;
+      var a = dir + (Math.random() - 0.5) * spread;
+      var v = speed * (0.45 + Math.random()*0.9);
+      fx.parts.push({
+        x:x, y:y,
+        vx: Math.cos(a)*v, vy: Math.sin(a)*v,
+        life: 1, decay: 0.012 + Math.random()*0.016,
+        size: (opts.size || 7) * (0.5 + Math.random()*0.9),
+        rot: Math.random()*Math.PI, spin: (Math.random()-0.5)*0.3,
+        grav: opts.grav === undefined ? 0.07 : opts.grav,
+        color: colors[(Math.random()*colors.length)|0]
+      });
+    }
+    if (!fx.running && fx.ctx){ fx.running = true; requestAnimationFrame(fxFrame); }
+  }
+
+  function fxFrame(){
+    var ctx = fx.ctx;
+    if (!ctx){ fx.running = false; return; }
+    ctx.setTransform(fx.dpr, 0, 0, fx.dpr, 0, 0);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    var alive = 0;
+    for (var i = 0; i < fx.parts.length; i++){
+      var p = fx.parts[i];
+      if (p.life <= 0) continue;
+      p.x += p.vx; p.y += p.vy;
+      p.vy += p.grav; p.vx *= 0.985; p.vy *= 0.985;
+      p.rot += p.spin;
+      p.life -= p.decay;
+      if (p.life <= 0) continue;
+      alive++;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, Math.min(1, p.life));
+      ctx.fillStyle = p.color;
+      starPath(ctx, p.size * (0.35 + p.life*0.65), 4);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (alive === 0){
+      fx.parts.length = 0;
+      fx.running = false;
+      ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      return;
+    }
+    if (fx.parts.length > 400){
+      fx.parts = fx.parts.filter(function(p){ return p.life > 0; });
+    }
+    requestAnimationFrame(fxFrame);
+  }
+
+  // The pointer sits at the top of the wheel — that's where sparks come off.
+  function wheelPointerPoint(){
+    var c = document.getElementById('wheelCanvas');
+    if (!c) return null;
+    var r = c.getBoundingClientRect();
+    if (!r.width) return null;
+    return { x: r.left + r.width/2, y: r.top + 8 };
+  }
+
+  function fxPrizeShower(){
+    if (!fxReady()) return;
+    var card = document.querySelector('.prize-card');
+    if (!card) return;
+    var r = card.getBoundingClientRect();
+    // burst from the corners so the sparkles frame the prize instead of covering it
+    fxEmit(r.left + 6, r.top + 10, 16, { dir: -2.4, spread: 1.5, speed: 5.2, size: 10, grav: 0.1 });
+    fxEmit(r.right - 6, r.top + 10, 16, { dir: -0.75, spread: 1.5, speed: 5.2, size: 10, grav: 0.1 });
+    fxEmit(r.left + 6, r.bottom - 10, 8, { dir: 2.5, spread: 1.2, speed: 3.6, size: 8, grav: 0.1 });
+    fxEmit(r.right - 6, r.bottom - 10, 8, { dir: 0.65, spread: 1.2, speed: 3.6, size: 8, grav: 0.1 });
+    for (var i = 0; i < 24; i++){
+      (function(n){
+        setTimeout(function(){
+          var box = document.querySelector('.prize-card');
+          if (!box) return;
+          var b = box.getBoundingClientRect();
+          fxEmit(b.left + Math.random()*b.width, b.top - 12, 1,
+                 { dir: Math.PI/2, spread: 0.9, speed: 1.5, size: 8, grav: 0.09 });
+        }, n * 45);
+      })(i);
+    }
+  }
+
+  /* ---------------- big job wheel ---------------- */
+
+  function wheelSection(kid){
+    var q = questFor(kid.id);
+    var prizes = approvedRewards();
+    var pending = pendingRewards();
+    var showPrizeWheel = (q.status === 'ready' || q.status === 'revealed');
+
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>The Big Job Wheel</h2>' +
+      '<span class="eyebrow">one spin a day · prize, not pay</span></div>';
+
+    if (state.bigjobs.length === 0 || prizes.length === 0){
+      html += '<div class="empty-note">' +
+        (state.bigjobs.length === 0 ? 'No big jobs on the wheel yet. ' : '') +
+        (prizes.length === 0 ? 'No prizes on the wheel yet — kids can suggest some below, a parent approves them.' : '') +
+        '</div>';
+      html += prizeSuggestBar(kid, pending);
+      html += '</section>';
+      return html;
+    }
+
+    html += '<div class="wheel-lane">';
+
+    // --- the wheel stage ---
+    html += '<div class="wheel-stage ' + (q.status === 'active' ? 'dim' : '') + '">' +
+      '<div class="wheel-pointer"></div>' +
+      '<canvas id="wheelCanvas" data-kind="' + (showPrizeWheel ? 'prize' : 'job') + '" role="img" aria-label="' +
+      (showPrizeWheel ? 'Prize wheel' : 'Big job wheel') + '"></canvas>' +
+      '</div>';
+
+    // --- the side panel, by state ---
+    html += '<div class="wheel-side">';
+    html += '<span class="wheel-label">' + (showPrizeWheel ? 'Prize wheel' : 'Big jobs · ' + state.bigjobs.length + ' on the wheel') + '</span>';
+
+    if (q.status === 'idle'){
+      if (canSpinToday(kid.id)){
+        html += '<h3>Feeling lucky, ' + esc(kid.name) + '?</h3>' +
+          '<p>Spin for a big job. Finish it, and you get to spin the prize wheel — you won’t know what you won until it’s done.</p>' +
+          '<button class="btn primary" data-action="spin-job" data-kid="' + kid.id + '">🎡 Spin the wheel</button>';
+      } else {
+        html += '<h3>Come back tomorrow</h3>' +
+          '<p>One spin a day, and today’s is already used. The wheel resets in the morning.</p>' +
+          (state.parentUnlocked ? '<button class="btn small" data-action="grant-spin" data-kid="' + kid.id + '">Grant an extra spin</button>' : '');
+      }
+    } else if (q.status === 'active'){
+      html += '<h3>Job in progress</h3>' +
+        '<div class="quest">' +
+          '<span class="quest-emoji">' + esc(q.jobEmoji || '🧽') + '</span>' +
+          '<div><div class="quest-title">' + esc(q.jobTitle) + '</div>' +
+          '<div class="quest-sub">spun ' + fmtDate(q.dateISO || todayISO()) + ' · prize unlocks when it’s done</div></div>' +
+        '</div>' +
+        '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">' +
+          '<button class="btn primary" data-action="finish-job" data-kid="' + kid.id + '">✓ I finished it</button>' +
+          (state.parentUnlocked ? '<button class="btn small ghost rust" data-action="cancel-quest" data-kid="' + kid.id + '" data-confirm="0">Cancel job</button>' : '') +
+        '</div>';
+    } else if (q.status === 'ready'){
+      html += '<h3>Nice work — now spin for your prize</h3>' +
+        '<p>You finished <strong>' + esc(q.jobTitle) + '</strong>. ' + prizes.length + ' prizes are on the wheel. Give it a spin.</p>' +
+        '<button class="btn primary" data-action="spin-prize" data-kid="' + kid.id + '">🎁 Spin for the prize</button>';
+    } else if (q.status === 'revealed'){
+      html += '<div class="prize-card">' +
+          '<div class="prize-kicker">You won</div>' +
+          '<div class="prize-emoji">' + esc(q.rewardEmoji || '🎁') + '</div>' +
+          '<div class="prize-label">' + esc(q.rewardLabel) + '</div>' +
+        '</div>' +
+        '<div style="margin-top:12px;"><button class="btn primary" data-action="claim-prize" data-kid="' + kid.id + '">Claim it →</button></div>' +
+        '<div class="spin-note">Claiming logs it so everyone remembers what you’re owed.</div>';
+    }
+    html += '</div></div>';
+
+    html += prizeSuggestBar(kid, pending);
+    if (state.parentUnlocked){
+      html += '<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line);">' +
+        '<button class="btn small" data-action="open-add-bigjob">+ Add a big job</button>' +
+        '<button class="btn small" data-action="open-manage-wheel">⚙︎ Edit wheels</button>' +
+        '</div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  function prizeSuggestBar(kid, pending){
+    var html = '<div style="margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);">' +
+      '<div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">' +
+        '<span class="eyebrow">Prizes on the wheel</span>' +
+        '<button class="btn small" data-action="open-suggest-prize" data-kid="' + kid.id + '">+ Suggest a prize</button>' +
+      '</div>';
+    var approved = approvedRewards();
+    if (approved.length){
+      html += '<div class="prize-grid">';
+      approved.forEach(function(r){
+        html += '<span class="chip">' + esc(r.emoji||'🎁') + ' ' + esc(r.label) + '</span>';
+      });
+      html += '</div>';
+    }
+    if (pending.length){
+      if (state.parentUnlocked){
+        pending.forEach(function(r){
+          html += '<div class="pending-row"><span>' + esc(r.emoji||'🎁') + ' ' + esc(r.label) +
+            ' <span class="log-date">— suggested by ' + esc(r.addedBy || 'a kid') + '</span></span>' +
+            '<span class="row-actions">' +
+              '<button class="btn small primary" data-action="approve-reward" data-id="' + r.id + '">Approve</button>' +
+              '<button class="icon-btn" data-action="delete-reward" data-id="' + r.id + '" data-confirm="0">🗑</button>' +
+            '</span></div>';
+        });
+      } else {
+        html += '<div class="spin-note">' + pending.length + ' prize idea' + (pending.length>1?'s':'') +
+          ' waiting for a parent to approve.</div>';
+      }
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function wheelItemsFor(kind){
+    if (kind === 'prize'){
+      return approvedRewards().map(function(r){
+        return { label: r.label, emoji: r.emoji||'🎁', id: r.id,
+                 weight: (Number(r.weight) > 0 ? Number(r.weight) : 1), jackpot: !!r.jackpot };
+      });
+    }
+    return state.bigjobs.map(function(j){
+      return { label: j.title, emoji: j.emoji||'🧽', id: j.id, weight: 1 };
+    });
+  }
+
+  // Slices are sized by weight, so a rare prize looks rare — the odds you can
+  // see on the wheel are the odds you actually get.
+  function sliceAngles(items){
+    var total = items.reduce(function(s,i){ return s + (i.weight||1); }, 0);
+    var out = [], acc = 0;
+    items.forEach(function(i){
+      var span = (Math.PI*2) * ((i.weight||1) / total);
+      out.push({ start: acc, span: span, mid: acc + span/2 });
+      acc += span;
+    });
+    return out;
+  }
+
+  function pickWeighted(items){
+    var total = items.reduce(function(s,i){ return s + (i.weight||1); }, 0);
+    var r = Math.random() * total, acc = 0;
+    for (var i=0;i<items.length;i++){
+      acc += (items[i].weight||1);
+      if (r <= acc) return i;
+    }
+    return items.length - 1;
+  }
+
+  function wheelColors(){
+    var cs = getComputedStyle(document.documentElement);
+    var out = [];
+    for (var i=1; i<=6; i++){
+      var v = cs.getPropertyValue('--wheel-' + i).trim();
+      if (v) out.push(v);
+    }
+    return out.length ? out : ['#2f6a3d','#bf7326','#a8402a','#5b7f4b','#2c6a67','#7a5288'];
+  }
+
+  function drawWheel(canvas, items, rotation){
+    if (!canvas || !items.length) return;
+    var size = canvas.clientWidth || 280;
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(size * dpr);
+    canvas.height = Math.round(size * dpr);
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
+
+    var colors = wheelColors();
+    var cx = size/2, cy = size/2, r = size/2 - 4;
+    var angles = sliceAngles(items);
+
+    var hubR = Math.max(20, r * 0.17);
+    var fontSize = items.length > 8 ? 10.5 : 12;
+    var emojiSize = fontSize + 5;
+    var maxWidth = r - 28 - hubR - emojiSize; // rim to hub, minus the emoji that leads the label
+
+    items.forEach(function(item, i){
+      var start = rotation + angles[i].start;
+      var span = angles[i].span;
+      var colorIdx = i % colors.length;
+      // don't let the palette wrap around into its own first color at the seam
+      if (i === items.length - 1 && items.length > 2 && (items.length % colors.length) === 1) colorIdx = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, start + span);
+      ctx.closePath();
+      ctx.fillStyle = item.jackpot ? '#c9a227' : colors[colorIdx];
+      ctx.fill();
+      ctx.strokeStyle = item.jackpot ? '#fff3c4' : 'rgba(255,255,255,0.55)';
+      ctx.lineWidth = item.jackpot ? 2.5 : 1.5;
+      ctx.stroke();
+
+      // label — flipped on the left half so it never reads upside down
+      var mid = start + span/2;
+      var norm = ((mid % (Math.PI*2)) + Math.PI*2) % (Math.PI*2);
+      var flip = (norm > Math.PI/2 && norm < Math.PI*1.5);
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(mid);
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#ffffff';
+
+      var edge = r - 14;
+      var label = item.label;
+      ctx.font = '700 ' + fontSize + 'px Karla, system-ui, sans-serif';
+      while (ctx.measureText(label).width > maxWidth && label.length > 5){
+        label = label.slice(0, -1);
+      }
+      if (label !== item.label) label = label.replace(/[\s,.]+$/, '') + '…';
+
+      // a sliver too thin to hold words gets the emoji alone
+      var tooThin = span < 0.2;
+
+      if (flip){
+        ctx.translate(edge, 0);
+        ctx.rotate(Math.PI);
+        ctx.textAlign = 'left';
+        ctx.font = emojiSize + 'px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+        ctx.fillText(item.emoji, 0, 0);
+        if (!tooThin){
+          ctx.font = '700 ' + fontSize + 'px Karla, system-ui, sans-serif';
+          ctx.fillText(label, emojiSize + 6, 1);
+        }
+      } else {
+        ctx.textAlign = 'right';
+        ctx.font = emojiSize + 'px system-ui, "Apple Color Emoji", "Segoe UI Emoji", sans-serif';
+        ctx.fillText(item.emoji, edge, 0);
+        if (!tooThin){
+          ctx.font = '700 ' + fontSize + 'px Karla, system-ui, sans-serif';
+          ctx.fillText(label, edge - emojiSize - 6, 1);
+        }
+      }
+      ctx.restore();
+    });
+
+    // hub
+    var cs = getComputedStyle(document.documentElement);
+    ctx.beginPath();
+    ctx.arc(cx, cy, hubR, 0, Math.PI*2);
+    ctx.fillStyle = (cs.getPropertyValue('--surface').trim() || '#fff');
+    ctx.fill();
+    ctx.strokeStyle = (cs.getPropertyValue('--line-strong').trim() || '#b9c2a6');
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    ctx.fillStyle = (cs.getPropertyValue('--accent').trim() || '#bf7326');
+    ctx.font = '700 15px "Zilla Slab", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✦', cx, cy + 1);
+  }
+
+  function redrawWheel(){
+    var canvas = document.getElementById('wheelCanvas');
+    if (!canvas) return;
+    var kind = canvas.dataset.kind;
+    drawWheel(canvas, wheelItemsFor(kind), wheelRotation[kind] || 0);
+  }
+
+  function prefersReducedMotion(){
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  function spinTo(kind, targetIndex, done){
+    var canvas = document.getElementById('wheelCanvas');
+    var items = wheelItemsFor(kind);
+    if (!canvas || !items.length){ done(); return; }
+
+    var centerAngle = sliceAngles(items)[targetIndex].mid;
+    var from = wheelRotation[kind] || 0;
+    var turns = 4 + Math.random() * 2;
+    // land the chosen slice under the pointer at the top (-90deg)
+    var target = (-Math.PI/2) - centerAngle + (Math.PI * 2 * Math.ceil(turns + from/(Math.PI*2)));
+    while (target < from + Math.PI * 6) target += Math.PI * 2;
+
+    if (prefersReducedMotion()){
+      wheelRotation[kind] = target;
+      drawWheel(canvas, items, target);
+      setTimeout(done, 150);
+      return;
+    }
+
+    var duration = 4200;
+    var startTime = null;
+    state.spinning = true;
+
+    function frame(now){
+      if (startTime === null) startTime = now;
+      var t = Math.min(1, (now - startTime) / duration);
+      var eased = 1 - Math.pow(1 - t, 4);
+      var current = from + (target - from) * eased;
+      wheelRotation[kind] = current;
+      drawWheel(canvas, items, current);
+
+      // sparks fly off the pointer, thinning out as the wheel slows
+      var pt = wheelPointerPoint();
+      if (pt && Math.random() < Math.pow(1 - t, 2) * 0.95){
+        fxEmit(pt.x, pt.y + 8, 2, { dir: -0.3, spread: 1.1, speed: 2.6, size: 6, grav: 0.13 });
+      }
+
+      if (t < 1){
+        requestAnimationFrame(frame);
+      } else {
+        state.spinning = false;
+        if (pt){
+          fxEmit(pt.x, pt.y + 8, 28,
+                 { dir: -Math.PI/2, spread: Math.PI*1.15, speed: 4.6, size: 9, grav: 0.14 });
+        }
+        done();
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function spinJobWheel(kid){
+    var items = wheelItemsFor('job');
+    if (!items.length) return;
+    var idx = pickWeighted(items);
+    spinTo('job', idx, function(){
+      var picked = items[idx];
+      db.doc('quests/' + kid.id).set({
+        kidId: kid.id, status: 'active',
+        jobId: picked.id, jobTitle: picked.label, jobEmoji: picked.emoji,
+        dateISO: todayISO(), lastSpinISO: todayISO(), spunAt: Date.now()
+      })['catch'](function(){ render(); });
+    });
+  }
+
+  function spinPrizeWheel(kid){
+    var items = wheelItemsFor('prize');
+    if (!items.length) return;
+    var idx = pickWeighted(items);
+    var q = questFor(kid.id);
+    spinTo('prize', idx, function(){
+      var picked = items[idx];
+      db.doc('quests/' + kid.id).set({
+        kidId: kid.id, status: 'revealed',
+        jobId: q.jobId || '', jobTitle: q.jobTitle || '', jobEmoji: q.jobEmoji || '🧽',
+        dateISO: q.dateISO || todayISO(), lastSpinISO: q.lastSpinISO || todayISO(),
+        spunAt: q.spunAt || Date.now(),
+        rewardId: picked.id, rewardLabel: picked.label, rewardEmoji: picked.emoji
+      })['catch'](function(){ render(); });
+    });
+  }
+
+  function claimPrize(kid){
+    var q = questFor(kid.id);
+    db.collection('log').add({
+      kidId: kid.id, title: q.jobTitle || 'Big job', amount: 0, type: 'bigjob',
+      reward: (q.rewardEmoji || '🎁') + ' ' + (q.rewardLabel || 'a prize'),
+      dateISO: todayISO(), ts: Date.now()
+    });
+    // and onto the shelf, where it stays visible until somebody actually delivers it
+    db.collection('owed').add({
+      kidId: kid.id,
+      label: q.rewardLabel || 'a prize',
+      emoji: q.rewardEmoji || '🎁',
+      jobTitle: q.jobTitle || '',
+      dateISO: todayISO(), ts: Date.now(), redeemed: false
+    });
+    db.doc('quests/' + kid.id).set({
+      kidId: kid.id, status: 'idle', lastSpinISO: q.lastSpinISO || todayISO()
+    });
+  }
+
+  function ledgerLog(kid){
+    var entries = kidLogs(kid.id).slice().sort(function(a,b){ return (b.ts||0)-(a.ts||0); }).slice(0,15);
+    var icons = { chore:'✅', bonus:'✨', deduction:'⚠️', payout:'💵', allowance:'🏷️',
+                  bigjob:'🎡', task:'🔔', interest:'📈', duty:'🏠' };
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>Ledger</h2><span class="eyebrow">recent activity</span></div>';
+    if (entries.length === 0){
+      html += '<div class="empty-note">Nothing logged yet — check off a chore to start earning.</div>';
+    } else {
+      html += '<div class="log-list">';
+      entries.forEach(function(l){
+        var amountCell;
+        if (l.type === 'bigjob'){
+          amountCell = '<span class="chip">' + esc(l.reward || 'prize won') + '</span>';
+        } else if (l.type === 'duty'){
+          amountCell = '<span class="log-date">your share</span>';
+        } else {
+          amountCell = '<div class="log-amt ' + (l.amount>=0?'credit':'debit') + '">' +
+            (l.amount>=0?'+':'') + money(l.amount) +
+            (isPending(l) ? ' <span class="log-date">⏳</span>' : '') + '</div>';
+        }
+        html += '<div class="log-row">' +
+          '<div class="log-icon">' + (icons[l.type]||'•') + '</div>' +
+          '<div class="log-main"><div class="log-title">' + esc(l.title) + (l.type==='bigjob' ? ' <span class="log-date">· big job</span>' : '') + '</div>' +
+          '<div class="log-date">' + fmtDate(l.dateISO) +
+            (l.bucket ? ' · from ' + BUCKET_META[l.bucket].label : '') +
+            (l.split ? ' · ' + money(l.split.spend) + ' / ' + money(l.split.save) + ' / ' + money(l.split.invest) : '') +
+          '</div></div>' +
+          amountCell +
+          (state.parentUnlocked ? '<button class="icon-btn" data-action="delete-log" data-id="' + l.id + '" data-confirm="0" title="Remove entry">✕</button>' : '') +
+        '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</section>';
+    return html;
+  }
+
+  function managePanel(){
+    var html = '<section class="card">' +
+      '<div class="card-head"><h2>Manage the ledger</h2><span class="eyebrow">parent mode</span></div>' +
+      '<div class="manage-grid">';
+    state.kids.forEach(function(k){
+      html += '<div class="manage-item"><div class="mi-label"><span>' + esc(k.emoji||'') + '</span>' + esc(k.name) + '</div>' +
+        '<div class="row-actions"><button class="icon-btn" data-action="open-edit-kid" data-id="' + k.id + '">✎</button>' +
+        '<button class="icon-btn" data-action="delete-kid" data-id="' + k.id + '" data-confirm="0">🗑</button></div></div>';
+    });
+    html += '</div>' +
+      '<div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">' +
+        '<button class="btn small" data-action="open-settings">⚙︎ Family name &amp; PIN</button>' +
+        '<button class="btn small" data-action="backup-data">⬇ Back up to a file</button>' +
+        '<button class="btn small" data-action="restore-data">⬆ Restore from a file</button>' +
+      '</div>' +
+      '<div class="spin-note">Everything lives in this browser on this device. Clearing your browsing data erases it, so take a backup now and then.</div>' +
+    '</section>';
+    return html;
+  }
+
+  function tipsPanel(){
+    var prompts = [
+      "Add a new chore called ‘Walk the dog’ worth $2 on Mon, Wed and Fri.",
+      "Put a rare jackpot slice on the prize wheel that only comes up once in a while.",
+      "Give each kid a savings goal bar toward something they want to buy.",
+      "Add a leaderboard that compares this week’s earnings between kids."
+    ];
+    var html = '<details class="tips card"' + (state.tipsOpen?' open':'') + ' data-action="toggle-tips">' +
+      '<summary>Kids: customize this with Claude</summary>' +
+      '<p>Parent Mode edits chores and values right here. For bigger changes — new features, a new look, new rules — tell Claude what you want in your chat, like these:</p>';
+    prompts.forEach(function(p){
+      html += '<div class="tip-prompt"><code>' + esc(p) + '</code></div>';
+    });
+    html += '</details>';
+    return html;
+  }
+
+  /* ---------------- modal ---------------- */
+
+  function openModal(html){
+    state.openModal = null;
+    document.getElementById('modalBody').innerHTML = html;
+    document.getElementById('overlay').hidden = false;
+  }
+  function closeModal(){
+    state.openModal = null;
+    document.getElementById('overlay').hidden = true;
+    document.getElementById('modalBody').innerHTML = '';
+  }
+
+  function emojiRow(name, options, current){
+    var html = '<div class="emoji-row">';
+    options.forEach(function(e){
+      html += '<button type="button" class="emoji-pick" data-action="pick-emoji" data-target="' + name + '">' + e + '</button>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function dayRow(selected){
+    selected = selected || [];
+    var html = '<div class="day-row">';
+    DOW.forEach(function(d){
+      html += '<label class="day-chip"><input type="checkbox" name="days" value="' + d + '" ' + (selected.indexOf(d)!==-1?'checked':'') + '>' + d + '</label>';
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function modalKidForm(existing){
+    var isEdit = !!existing;
+    var sp = kidSplit(existing);
+    var html = '<h3>' + (isEdit? 'Edit kid' : 'Add a kid') + '</h3>' +
+      '<form data-form="kid" data-id="' + (existing?existing.id:'') + '">' +
+      '<div class="field"><label>Name</label><input type="text" name="name" required value="' + esc(existing?existing.name:'') + '" placeholder="e.g. Sam"></div>' +
+      '<div class="field"><label>Emoji</label><input type="text" name="emoji" maxlength="4" value="' + esc(existing?existing.emoji:'🧒') + '">' + emojiRow('emoji', KID_EMOJI) + '</div>' +
+      '<div class="field"><label>Base weekly allowance (optional)</label><input type="number" name="baseAllowance" min="0" step="0.5" value="' + (existing?existing.baseAllowance||0:0) + '"></div>' +
+
+      (isEdit ? '' :
+        '<div class="toggle-line">' +
+          '<input type="checkbox" id="starterChores" name="starterChores" checked>' +
+          '<label for="starterChores">Start with a full chore list I can trim</label>' +
+        '</div>' +
+        '<div class="modal-note">Adds ' + STARTER_CHORES.length + ' everyday chores and ' + STARTER_TASKS.length +
+        ' as-needed jobs. Deleting the ones that don’t apply is quicker than inventing a list from scratch.</div>') +
+
+      '<div class="toggle-line">' +
+        '<input type="checkbox" id="splitEnabled" name="splitEnabled" ' + (sp.on ? 'checked' : '') + '>' +
+        '<label for="splitEnabled">Split every dollar three ways</label>' +
+      '</div>' +
+      '<div class="field"><label>How to divide it</label>' +
+        '<select name="splitMode" id="splitMode" style="border:1px solid var(--line-strong); border-radius:8px; padding:10px 12px; font-size:0.95rem; background:var(--surface-2); color:var(--ink);">' +
+          '<option value="even"' + (sp.mode === 'even' ? ' selected' : '') + '>Evenly — a third to each pot</option>' +
+          '<option value="custom"' + (sp.mode === 'custom' ? ' selected' : '') + '>Custom percentages</option>' +
+        '</select></div>' +
+      '<div class="pct-row" id="pctRow">' +
+        '<div class="field"><label>Spend %</label><input type="number" name="splitSpend" min="0" max="100" step="1" value="' + sp.pct.spend + '"></div>' +
+        '<div class="field"><label>Save %</label><input type="number" name="splitSave" min="0" max="100" step="1" value="' + sp.pct.save + '"></div>' +
+        '<div class="field"><label>Invest %</label><input type="number" name="splitInvest" min="0" max="100" step="1" value="' + sp.pct.invest + '"></div>' +
+      '</div>' +
+      '<div class="pct-sum" id="pctSum"></div>' +
+      '<div class="modal-note" style="margin-top:10px;">Applies to money earned from here on — past entries keep the split they were earned under. A dollar can’t divide by three exactly, so the odd cent rotates between the pots.</div>' +
+
+      '<div class="field"><label>Interest on the Save pot (% a year, 0 = none)</label>' +
+        '<input type="number" name="interestRate" min="0" max="100" step="0.5" value="' + (existing?(existing.interestRate||0):0) + '"></div>' +
+      '<div class="modal-note">You are the bank. It compounds daily on whatever is sitting in Save — a generous rate makes the lesson land faster than a realistic one.</div>' +
+
+      '<div class="field"><label>Savings goal (optional)</label><input type="text" name="goalLabel" maxlength="40" value="' +
+        esc(existing?existing.goalLabel||'':'') + '" placeholder="e.g. Mountain bike"></div>' +
+      '<div class="field"><label>Goal amount</label><input type="number" name="goalAmount" min="0" step="1" value="' + (existing?existing.goalAmount||0:0) + '"></div>' +
+
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + (isEdit?'Save':'Add kid') + '</button>' +
+      '</div></form>';
+    openModal(html);
+    wirePctSum();
+  }
+
+  function wirePctSum(){
+    var form = document.querySelector('#modalBody form[data-form="kid"]');
+    if (!form) return;
+    var row = document.getElementById('pctRow');
+    var sumEl = document.getElementById('pctSum');
+    var modeEl = document.getElementById('splitMode');
+
+    function update(){
+      var custom = modeEl.value === 'custom';
+      if (row) row.hidden = !custom;
+      if (!sumEl) return;
+      if (!custom){
+        sumEl.textContent = 'Each pot gets an equal third of every dollar.';
+        sumEl.className = 'pct-sum';
+        return;
+      }
+      var sum = ['splitSpend','splitSave','splitInvest'].reduce(function(s,n){
+        return s + (parseFloat(form.elements[n].value) || 0);
+      }, 0);
+      sumEl.textContent = sum === 100 ? 'Adds up to 100% ✓' : 'Adds up to ' + sum + '% — needs to be 100%';
+      sumEl.className = 'pct-sum' + (sum === 100 ? '' : ' bad');
+    }
+    ['splitSpend','splitSave','splitInvest'].forEach(function(n){
+      form.elements[n].addEventListener('input', update);
+    });
+    if (modeEl) modeEl.addEventListener('change', update);
+    update();
+  }
+
+  function modalInvestValue(kidId){
+    var kid = state.kids.find(function(k){ return k.id === kidId; });
+    var contributed = round2(bucketBalance(kidId, 'invest'));
+    var html = '<h3>What is the invest pot worth?</h3>' +
+      '<div class="modal-note">' + esc(kid?kid.name:'') + ' has put <strong>' + money(contributed) + '</strong> in. ' +
+      'Check the real account and type what it’s worth today — the difference is the market lesson.</div>' +
+      '<form data-form="investvalue" data-kid="' + kidId + '">' +
+      '<div class="field"><label>Current value</label><input type="number" name="value" min="0" step="0.01" required value="' +
+        (typeof kid.investValue === 'number' ? kid.investValue : contributed) + '"></div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">Save</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalChoreForm(kidId, existing, forceOpen){
+    var isEdit = !!existing;
+    if (forceOpen && !existing) existing = { kidId:'open', title:'', emoji:'🙋', value:2, days: ALL_DAYS.slice() };
+    var html = '<h3>' + (isEdit?'Edit chore':'Add a chore') + '</h3>' +
+      '<form data-form="chore" data-id="' + (existing && existing.id ? existing.id : '') + '" data-kid="' + kidId + '">' +
+      '<div class="field"><label>Chore</label><input type="text" name="title" required value="' + esc(existing?existing.title:'') + '" placeholder="e.g. Empty the dishwasher"></div>' +
+      '<div class="field"><label>Emoji</label><input type="text" name="emoji" maxlength="4" value="' + esc(existing?existing.emoji:'⭐') + '">' + emojiRow('emoji', CHORE_EMOJI) + '</div>' +
+      '<div class="field"><label>Pay per day done</label><input type="number" name="value" min="0" step="0.25" required value="' + (existing?existing.value:'1') + '"></div>' +
+      '<div class="field"><label>Days</label>' + dayRow(existing?existing.days:['Mon','Tue','Wed','Thu','Fri']) + '</div>' +
+      '<div class="toggle-line">' +
+        '<input type="checkbox" id="choreUnpaid" name="unpaid" ' + (existing && existing.unpaid ? 'checked' : '') + '>' +
+        '<label for="choreUnpaid">Unpaid — just part of living here</label>' +
+      '</div>' +
+      '<div class="toggle-line">' +
+        '<input type="checkbox" id="choreOpen" name="openToAll" ' + (existing && existing.kidId === 'open' ? 'checked' : '') + '>' +
+        '<label for="choreOpen">Up for grabs — any kid can claim it</label>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + (isEdit?'Save':'Add chore') + '</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalMoneyForm(kind, kidId){
+    var titles = { bonus:'Add a bonus', deduction:'Add a deduction', payout:'Record a payout' };
+    var hint = { bonus:'A little extra for going above and beyond.', deduction:'Money off the balance — explain why below.', payout:'Cash handed over reduces the running balance.' };
+    var kid = state.kids.find(function(k){ return k.id===kidId; });
+    var sp = kidSplit(kid);
+    var maxNote = kind==='payout' ? '<div class="modal-note">Current balance: ' + money(kidBalance(kidId)) + '</div>' : '';
+
+    // Bonuses get split like any other earning; money coming OUT has to name a pot.
+    var bucketField = '';
+    if (sp.on && kind !== 'bonus'){
+      bucketField = '<div class="field"><label>' + (kind==='payout' ? 'Pay out of' : 'Take it out of') + '</label>' +
+        '<select name="bucket" style="border:1px solid var(--line-strong); border-radius:8px; padding:10px 12px; font-size:0.95rem; background:var(--surface-2); color:var(--ink);">';
+      BUCKETS.forEach(function(b){
+        bucketField += '<option value="' + b + '">' + BUCKET_META[b].label + ' — ' + money(bucketBalance(kidId, b)) + '</option>';
+      });
+      bucketField += '</select></div>';
+    } else if (sp.on && kind === 'bonus'){
+      bucketField = '<div class="modal-note">' + (sp.mode === 'even'
+        ? 'Splits evenly three ways, like everything else ' + esc(kid?kid.name:'') + ' earns.'
+        : 'Splits ' + sp.pct.spend + '/' + sp.pct.save + '/' + sp.pct.invest + ' like everything else ' + esc(kid?kid.name:'') + ' earns.') + '</div>';
+    }
+
+    var html = '<h3>' + titles[kind] + ' — ' + esc(kid?kid.name:'') + '</h3>' +
+      '<div class="modal-note">' + hint[kind] + '</div>' +
+      maxNote +
+      '<form data-form="money" data-kind="' + kind + '" data-kid="' + kidId + '">' +
+      '<div class="field"><label>Amount</label><input type="number" name="amount" min="0.01" step="0.25" required></div>' +
+      bucketField +
+      '<div class="field"><label>Note</label><input type="text" name="note" placeholder="' + (kind==='payout'?'Paid in cash':'What was this for?') + '"></div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + titles[kind] + '</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalPrizeForm(kidId, existing){
+    var kid = state.kids.find(function(k){ return k.id === kidId; });
+    var isParent = state.parentUnlocked;
+    var html = '<h3>' + (existing ? 'Edit prize' : 'Suggest a prize') + '</h3>' +
+      (existing ? '' : '<div class="modal-note">' + (isParent
+        ? 'Added from Parent Mode, so it goes straight onto the wheel.'
+        : 'Write down something you’d actually want. A parent approves it before it lands on the wheel.') + '</div>') +
+      '<form data-form="prize" data-id="' + (existing?existing.id:'') + '" data-kid="' + (kidId||'') + '">' +
+      '<div class="field"><label>The prize</label><input type="text" name="label" required maxlength="46" value="' +
+        esc(existing?existing.label:'') + '" placeholder="e.g. Pick Friday’s movie"></div>' +
+      '<div class="field"><label>Emoji</label><input type="text" name="emoji" maxlength="4" value="' + esc(existing?existing.emoji:'🎁') + '">' +
+        emojiRow('emoji', ['🎬','🍕','🍦','🎮','⏰','🛌','🎧','🏀','🐕','🎟️']) + '</div>' +
+      (isParent ?
+        '<div class="field"><label>How often it should come up</label>' +
+          '<select name="weight" style="border:1px solid var(--line-strong); border-radius:8px; padding:10px 12px; font-size:0.95rem; background:var(--surface-2); color:var(--ink);">' +
+            '<option value="1"' + (!existing || (existing.weight||1) == 1 ? ' selected' : '') + '>Normal — same odds as the rest</option>' +
+            '<option value="2"' + (existing && existing.weight == 2 ? ' selected' : '') + '>Often — twice the usual chance</option>' +
+            '<option value="0.35"' + (existing && existing.weight == 0.35 ? ' selected' : '') + '>Rare — a thin slice</option>' +
+            '<option value="0.12"' + (existing && existing.weight == 0.12 ? ' selected' : '') + '>Jackpot — barely ever</option>' +
+          '</select></div>' +
+        '<div class="toggle-line">' +
+          '<input type="checkbox" id="prizeJackpot" name="jackpot" ' + (existing && existing.jackpot ? 'checked' : '') + '>' +
+          '<label for="prizeJackpot">Mark it gold on the wheel</label>' +
+        '</div>' +
+        '<div class="modal-note">The slice is drawn to match its odds, so a jackpot looks as thin as it really is. No fixing the wheel.</div>' : '') +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + (existing ? 'Save' : (isParent ? 'Add to wheel' : 'Send to a parent')) + '</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalTaskForm(kidId, existing){
+    var html = '<h3>' + (existing ? 'Edit job' : 'Add an as-needed job') + '</h3>' +
+      '<div class="modal-note">These have no day attached — they get done when the situation calls for it, and pay every time.</div>' +
+      '<form data-form="task" data-id="' + (existing?existing.id:'') + '" data-kid="' + (existing?existing.kidId:kidId) + '">' +
+      '<div class="field"><label>The job</label><input type="text" name="title" required maxlength="40" value="' +
+        esc(existing?existing.title:'') + '" placeholder="e.g. Empty the dishwasher"></div>' +
+      '<div class="field"><label>Emoji</label><input type="text" name="emoji" maxlength="4" value="' + esc(existing?existing.emoji:'✅') + '">' +
+        emojiRow('emoji', ['🍽️','🗑️','🛒','🐕','📬','🧺','🚿','🪴','🧊','🚪']) + '</div>' +
+      '<div class="field"><label>Pays each time</label><input type="number" name="value" min="0" step="0.25" required value="' + (existing?existing.value:'1') + '"></div>' +
+      '<div class="field"><label>Most times per week (0 = no limit)</label><input type="number" name="weeklyCap" min="0" step="1" value="' + (existing?(existing.weeklyCap||0):3) + '"></div>' +
+      '<div class="modal-note">A cap stops a kid tapping “Did it” twenty times on a Tuesday.</div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + (existing?'Save':'Add job') + '</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalBigJobForm(existing){
+    var html = '<h3>' + (existing?'Edit big job':'Add a big job') + '</h3>' +
+      '<div class="modal-note">Big jobs pay in prizes, not dollars — save the money chores for the weekly chart.</div>' +
+      '<form data-form="bigjob" data-id="' + (existing?existing.id:'') + '">' +
+      '<div class="field"><label>The job</label><input type="text" name="title" required maxlength="40" value="' +
+        esc(existing?existing.title:'') + '" placeholder="e.g. Vacuum out the car"></div>' +
+      '<div class="field"><label>Emoji</label><input type="text" name="emoji" maxlength="4" value="' + esc(existing?existing.emoji:'🧽') + '">' +
+        emojiRow('emoji', ['🚗','🧽','🪟','🧊','🧹','🗄️','🌿','🧺','🛁','🚪']) + '</div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">' + (existing?'Save':'Add to wheel') + '</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalManageWheel(){
+    var html = '<h3>Edit the wheels</h3>';
+    html += '<div class="eyebrow" style="margin-bottom:8px;">Big jobs</div>';
+    if (!state.bigjobs.length){
+      html += '<div class="empty-note">Nothing on the job wheel yet.</div>';
+    }
+    state.bigjobs.forEach(function(j){
+      html += '<div class="pending-row"><span>' + esc(j.emoji||'🧽') + ' ' + esc(j.title) + '</span>' +
+        '<span class="row-actions">' +
+        '<button class="icon-btn" data-action="open-edit-bigjob" data-id="' + j.id + '">✎</button>' +
+        '<button class="icon-btn" data-action="delete-bigjob" data-id="' + j.id + '" data-confirm="0">🗑</button>' +
+        '</span></div>';
+    });
+    html += '<div class="eyebrow" style="margin:18px 0 8px;">Prizes</div>';
+    if (!state.rewards.length){
+      html += '<div class="empty-note">No prizes yet.</div>';
+    }
+    state.rewards.forEach(function(r){
+      html += '<div class="pending-row"><span>' + esc(r.emoji||'🎁') + ' ' + esc(r.label) +
+        (r.approved ? '' : ' <span class="log-date">— pending</span>') + '</span>' +
+        '<span class="row-actions">' +
+        (r.approved ? '' : '<button class="btn small primary" data-action="approve-reward" data-id="' + r.id + '">Approve</button>') +
+        '<button class="icon-btn" data-action="open-edit-prize" data-id="' + r.id + '">✎</button>' +
+        '<button class="icon-btn" data-action="delete-reward" data-id="' + r.id + '" data-confirm="0">🗑</button>' +
+        '</span></div>';
+    });
+    html += '<div class="modal-actions">' +
+      '<button type="button" class="btn small" data-action="open-add-bigjob">+ Big job</button>' +
+      '<button type="button" class="btn small" data-action="open-suggest-prize">+ Prize</button>' +
+      '<button type="button" class="btn primary" data-action="close-modal">Done</button>' +
+      '</div>';
+    openModal(html);
+    state.openModal = 'wheel'; // keeps this list live as the store changes
+  }
+
+  function modalSettingsForm(){
+    var html = '<h3>Family name &amp; PIN</h3>' +
+      '<form data-form="settings">' +
+      '<div class="field"><label>Family name</label><input type="text" name="familyName" value="' + esc(state.config.familyName||'') + '"></div>' +
+      '<div class="field"><label>New parent PIN (4 digits, optional)</label><input type="text" name="pin" maxlength="4" pattern="[0-9]{4}" placeholder="' + esc(state.config.pin||'1234') + '"></div>' +
+      '<div class="toggle-line">' +
+        '<input type="checkbox" id="requireApproval" name="requireApproval" ' + (state.config.requireApproval ? 'checked' : '') + '>' +
+        '<label for="requireApproval">Check ticked jobs before the money counts</label>' +
+      '</div>' +
+      '<div class="toggle-line">' +
+        '<input type="checkbox" id="showLeaderboard" name="showLeaderboard" ' + (state.config.showLeaderboard ? 'checked' : '') + '>' +
+        '<label for="showLeaderboard">Show the kids side by side</label>' +
+      '</div>' +
+      '<div class="modal-note">Side-by-side works when kids are close in age and enjoy a race. It goes badly when one is older or simply doesn’t care — off by default for a reason.</div>' +
+      '<div class="modal-note">Leave the PIN blank to keep it the same. This is a light lock so kids don’t change values by accident — not real security.</div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">Save</button>' +
+      '</div></form>';
+    openModal(html);
+  }
+
+  function modalPin(){
+    var html = '<h3>Enter parent PIN</h3>' +
+      '<form data-form="pin">' +
+      '<div class="pin-dots"><input type="password" inputmode="numeric" name="pin" maxlength="4" autofocus></div>' +
+      '<div class="pin-error" id="pinErr"></div>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn ghost" data-action="close-modal">Cancel</button>' +
+        '<button type="submit" class="btn primary">Unlock</button>' +
+      '</div></form>';
+    openModal(html);
+    setTimeout(function(){ var i=document.querySelector('#modalBody input[name=pin]'); if(i) i.focus(); }, 30);
+  }
+
+  /* ---------------- db writes ---------------- */
+
+  function kidFields(data){
+    return {
+      name: data.name,
+      emoji: data.emoji || '🧒',
+      baseAllowance: parseFloat(data.baseAllowance)||0,
+      splitEnabled: !!data.splitEnabled,
+      splitMode: data.splitMode === 'custom' ? 'custom' : 'even',
+      splitSpend: parseFloat(data.splitSpend)||0,
+      splitSave: parseFloat(data.splitSave)||0,
+      splitInvest: parseFloat(data.splitInvest)||0,
+      goalLabel: data.goalLabel || '',
+      goalAmount: parseFloat(data.goalAmount)||0,
+      interestRate: parseFloat(data.interestRate)||0
+    };
+  }
+  function addKidWrite(data){
+    var fields = kidFields(data);
+    fields.createdAt = Date.now();
+    return db.collection('kids').add(fields);
+  }
+  function saveKidWrite(id, data){
+    return db.doc('kids/'+id).update(kidFields(data));
+  }
+  function seedStarterFor(kidId){
+    STARTER_CHORES.forEach(function(c, i){
+      db.collection('chores').add({
+        kidId: kidId, title: c.title, emoji: c.emoji, value: c.value,
+        days: c.days.slice(), createdAt: Date.now() + i
+      });
+    });
+    STARTER_TASKS.forEach(function(t, i){
+      db.collection('tasks').add({
+        kidId: kidId, title: t.title, emoji: t.emoji, value: t.value,
+        weeklyCap: t.weeklyCap, createdAt: Date.now() + i
+      });
+    });
+  }
+
+  function addChoreWrite(kidId, data, days){
+    return db.collection('chores').add({
+      kidId: data.openToAll ? 'open' : kidId, title: data.title, emoji: data.emoji || '⭐',
+      value: parseFloat(data.value)||0, days: days,
+      unpaid: !!data.unpaid, createdAt: Date.now()
+    });
+  }
+  function saveChoreWrite(id, data, days, originalKidId){
+    return db.doc('chores/'+id).update({
+      kidId: data.openToAll ? 'open' : (originalKidId === 'open' ? (state.selectedKidId || originalKidId) : originalKidId),
+      title: data.title, emoji: data.emoji || '⭐', value: parseFloat(data.value)||0,
+      days: days, unpaid: !!data.unpaid
+    });
+  }
+  function toggleChore(kidId, choreId, iso, choreTitle, value){
+    var id = choreLogId(kidId, choreId, iso);
+    var existing = logEntry(id);
+    if (existing){
+      return db.doc('log/'+id).delete();
+    }
+    var kid = state.kids.find(function(k){ return k.id === kidId; });
+    var chore = state.chores.find(function(c){ return c.id === choreId; });
+    var unpaid = chore && chore.unpaid;
+    var amount = unpaid ? 0 : value;
+    var entry = {
+      kidId: kidId, choreId: choreId, title: choreTitle, amount: amount,
+      type: unpaid ? 'duty' : 'chore', dateISO: iso, ts: Date.now()
+    };
+    if (!unpaid){
+      var split = splitAmount(kid, amount);
+      if (split) entry.split = split;
+      if (approvalOn()) entry.approved = false;
+    }
+    if (chore && chore.kidId === 'open') entry.claimed = true;
+    return db.doc('log/'+id).set(entry);
+  }
+  function addAllowance(kid){
+    var mondayISO = toISO(startOfWeek(new Date()));
+    var id = allowanceLogId(kid.id, mondayISO);
+    var entry = {
+      kidId: kid.id, title: 'Weekly allowance', amount: kid.baseAllowance, type: 'allowance',
+      dateISO: todayISO(), ts: Date.now()
+    };
+    var split = splitAmount(kid, kid.baseAllowance);
+    if (split) entry.split = split;
+    return db.doc('log/'+id).set(entry);
+  }
+  function addMoneyEntry(kind, kidId, amount, note, bucket){
+    var sign = kind==='bonus' ? 1 : -1;
+    var titleFallback = kind==='bonus' ? 'Bonus' : (kind==='deduction' ? 'Deduction' : 'Payout');
+    var kid = state.kids.find(function(k){ return k.id === kidId; });
+    var signed = sign * Math.abs(amount);
+    var entry = {
+      kidId: kidId, title: note ? note : titleFallback, amount: signed, type: kind,
+      dateISO: todayISO(), ts: Date.now()
+    };
+    if (kind === 'bonus'){
+      var split = splitAmount(kid, signed);
+      if (split) entry.split = split;
+    } else if (kidSplit(kid).on){
+      entry.bucket = (BUCKETS.indexOf(bucket) !== -1) ? bucket : 'spend';
+    }
+    return db.collection('log').add(entry);
+  }
+
+  /* ---------------- events ---------------- */
+
+  function confirmTwice(btn, action){
+    if (btn.dataset.confirm !== '1'){
+      btn.dataset.confirm = '1';
+      var original = btn.innerHTML;
+      btn.dataset.original = original;
+      btn.innerHTML = '❓';
+      btn.title = 'Click again to confirm';
+      setTimeout(function(){
+        if (btn.dataset.confirm === '1'){
+          btn.dataset.confirm = '0';
+          btn.innerHTML = btn.dataset.original || original;
+        }
+      }, 3500);
+      return false;
+    }
+    action();
+    return true;
+  }
+
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-action]');
+    if (!t) return;
+    var action = t.dataset.action;
+
+    if (action === 'week-prev'){ state.weekOffset--; render(); return; }
+    if (action === 'week-next'){ state.weekOffset++; render(); return; }
+    if (action === 'select-kid'){ state.selectedKidId = t.dataset.id; render(); return; }
+    if (action === 'toggle-tips'){ return; } // native <details>
+
+    if (action === 'toggle-parent'){
+      if (state.parentUnlocked){ state.parentUnlocked = false; render(); }
+      else { modalPin(); }
+      return;
+    }
+    if (action === 'close-modal'){ closeModal(); return; }
+
+    if (action === 'toggle-chore'){
+      if (!state.parentUnlocked) {
+        // kids can check off their own chores without unlocking parent mode
+      }
+      var kid = state.kids.find(function(k){return k.id===t.dataset.kid;});
+      var ch = state.chores.find(function(c){return c.id===t.dataset.chore;});
+      if (kid && ch) toggleChore(kid.id, ch.id, t.dataset.date, ch.title, ch.value);
+      return;
+    }
+
+    if (action === 'open-add-kid'){ modalKidForm(null); return; }
+    if (action === 'open-edit-kid'){
+      var k = state.kids.find(function(x){return x.id===t.dataset.id;});
+      modalKidForm(k); return;
+    }
+    if (action === 'delete-kid'){
+      confirmTwice(t, function(){ db.doc('kids/'+t.dataset.id).delete(); });
+      return;
+    }
+
+    if (action === 'open-add-chore'){ modalChoreForm(t.dataset.kid, null); return; }
+    if (action === 'open-edit-chore'){
+      var ch2 = state.chores.find(function(x){return x.id===t.dataset.id;});
+      modalChoreForm(ch2.kidId, ch2); return;
+    }
+    if (action === 'delete-chore'){
+      confirmTwice(t, function(){ db.doc('chores/'+t.dataset.id).delete(); });
+      return;
+    }
+    if (action === 'delete-log'){
+      confirmTwice(t, function(){ db.doc('log/'+t.dataset.id).delete(); });
+      return;
+    }
+
+    if (action === 'open-bonus'){ modalMoneyForm('bonus', t.dataset.kid); return; }
+    if (action === 'open-deduction'){ modalMoneyForm('deduction', t.dataset.kid); return; }
+    if (action === 'open-payout'){ modalMoneyForm('payout', t.dataset.kid); return; }
+    if (action === 'add-allowance'){
+      var kid3 = state.kids.find(function(x){return x.id===t.dataset.kid;});
+      if (kid3) addAllowance(kid3);
+      return;
+    }
+    if (action === 'open-settings'){ modalSettingsForm(); return; }
+    if (action === 'open-invest-value'){ modalInvestValue(t.dataset.kid); return; }
+    if (action === 'backup-data'){ backupData(); return; }
+    if (action === 'restore-data'){ restoreData(); return; }
+
+    /* --- kitchen display --- */
+    if (action === 'enter-display'){ state.displayMode = true; render(); return; }
+    if (action === 'exit-display'){ state.displayMode = false; render(); return; }
+
+    /* --- approval queue --- */
+    if (action === 'approve-entry'){
+      db.doc('log/' + t.dataset.id).update({ approved: true, approvedOn: todayISO() });
+      return;
+    }
+    if (action === 'reject-entry'){
+      confirmTwice(t, function(){ db.doc('log/' + t.dataset.id).delete(); });
+      return;
+    }
+    if (action === 'approve-all'){
+      allPending().forEach(function(l){
+        db.doc('log/' + l.id).update({ approved: true, approvedOn: todayISO() });
+      });
+      return;
+    }
+
+    /* --- up for grabs --- */
+    if (action === 'claim-open'){
+      var coKid = state.kids.find(function(k){ return k.id === t.dataset.kid; });
+      var coChore = state.chores.find(function(c){ return c.id === t.dataset.chore; });
+      if (coKid && coChore){
+        t.disabled = true;
+        var coEntry = {
+          kidId: coKid.id, choreId: coChore.id, title: coChore.title, amount: coChore.value,
+          type: 'chore', claimed: true, dateISO: todayISO(), ts: Date.now()
+        };
+        var coSplit = splitAmount(coKid, coChore.value);
+        if (coSplit) coEntry.split = coSplit;
+        if (approvalOn()) coEntry.approved = false;
+        db.doc('log/' + choreLogId(coKid.id, coChore.id, todayISO())).set(coEntry);
+      }
+      return;
+    }
+    if (action === 'unclaim-open'){
+      confirmTwice(t, function(){ db.doc('log/' + t.dataset.id).delete(); });
+      return;
+    }
+    if (action === 'open-add-open-chore'){ modalChoreForm(state.selectedKidId, null, true); return; }
+
+    /* --- big job wheel --- */
+    if (action === 'spin-job'){
+      var sk = state.kids.find(function(x){ return x.id === t.dataset.kid; });
+      if (sk && canSpinToday(sk.id)){ t.disabled = true; spinJobWheel(sk); }
+      return;
+    }
+    if (action === 'finish-job'){
+      var fk = t.dataset.kid;
+      var fq = questFor(fk);
+      if (fq.status === 'active'){
+        db.doc('quests/' + fk).update({ status: 'ready', finishedAt: Date.now() });
+      }
+      return;
+    }
+    if (action === 'spin-prize'){
+      var pk = state.kids.find(function(x){ return x.id === t.dataset.kid; });
+      if (pk && questFor(pk.id).status === 'ready'){ t.disabled = true; spinPrizeWheel(pk); }
+      return;
+    }
+    if (action === 'claim-prize'){
+      var ck = state.kids.find(function(x){ return x.id === t.dataset.kid; });
+      if (ck && questFor(ck.id).status === 'revealed') claimPrize(ck);
+      return;
+    }
+    if (action === 'cancel-quest'){
+      confirmTwice(t, function(){
+        var q = questFor(t.dataset.kid);
+        db.doc('quests/' + t.dataset.kid).set({
+          kidId: t.dataset.kid, status: 'idle', lastSpinISO: q.lastSpinISO || ''
+        });
+      });
+      return;
+    }
+    if (action === 'grant-spin'){
+      var gq = questFor(t.dataset.kid);
+      db.doc('quests/' + t.dataset.kid).set({ kidId: t.dataset.kid, status: 'idle', lastSpinISO: '' });
+      return;
+    }
+    /* --- as-needed jobs --- */
+    if (action === 'did-task'){
+      var dtKid = state.kids.find(function(k){ return k.id === t.dataset.kid; });
+      var dtTask = state.tasks.find(function(x){ return x.id === t.dataset.task; });
+      if (dtKid && dtTask){
+        t.disabled = true;
+        var entry = {
+          kidId: dtKid.id, taskId: dtTask.id, title: dtTask.title, amount: dtTask.value,
+          type: 'task', dateISO: todayISO(), ts: Date.now()
+        };
+        var tsplit = splitAmount(dtKid, dtTask.value);
+        if (tsplit) entry.split = tsplit;
+        if (approvalOn()) entry.approved = false;
+        db.collection('log').add(entry);
+      }
+      return;
+    }
+    if (action === 'undo-task'){
+      var last = taskEntriesThisWeek(t.dataset.kid, t.dataset.task)[0];
+      if (last) db.doc('log/' + last.id).delete();
+      return;
+    }
+    if (action === 'open-add-task'){ modalTaskForm(t.dataset.kid, null); return; }
+    if (action === 'open-edit-task'){
+      var etTask = state.tasks.find(function(x){ return x.id === t.dataset.id; });
+      modalTaskForm(etTask.kidId, etTask); return;
+    }
+    if (action === 'delete-task'){
+      confirmTwice(t, function(){ db.doc('tasks/' + t.dataset.id).delete(); });
+      return;
+    }
+    if (action === 'redeem-prize'){
+      db.doc('owed/' + t.dataset.id).update({ redeemed: true, redeemedOn: todayISO() });
+      return;
+    }
+
+    if (action === 'open-suggest-prize'){ modalPrizeForm(t.dataset.kid || state.selectedKidId, null); return; }
+    if (action === 'open-edit-prize'){
+      var rEdit = state.rewards.find(function(x){ return x.id === t.dataset.id; });
+      modalPrizeForm(state.selectedKidId, rEdit); return;
+    }
+    if (action === 'approve-reward'){
+      db.doc('rewards/' + t.dataset.id).update({ approved: true });
+      return;
+    }
+    if (action === 'delete-reward'){
+      confirmTwice(t, function(){ db.doc('rewards/' + t.dataset.id).delete(); closeModal(); });
+      return;
+    }
+    if (action === 'open-add-bigjob'){ modalBigJobForm(null); return; }
+    if (action === 'open-edit-bigjob'){
+      var jEdit = state.bigjobs.find(function(x){ return x.id === t.dataset.id; });
+      modalBigJobForm(jEdit); return;
+    }
+    if (action === 'delete-bigjob'){
+      confirmTwice(t, function(){ db.doc('bigjobs/' + t.dataset.id).delete(); closeModal(); });
+      return;
+    }
+    if (action === 'open-manage-wheel'){ modalManageWheel(); return; }
+
+    if (action === 'pick-emoji'){
+      var form = t.closest('form');
+      var input = form.querySelector('input[name="emoji"]');
+      if (input) input.value = t.textContent;
+      return;
+    }
+  });
+
+  document.addEventListener('submit', function(e){
+    var form = e.target.closest('form');
+    if (!form) return;
+    e.preventDefault();
+    var kind = form.dataset.form;
+    var fd = new FormData(form);
+    var data = {}; fd.forEach(function(v,k){ if(k!=='days') data[k]=v; });
+
+    if (kind === 'kid'){
+      var pctSum = (parseFloat(data.splitSpend)||0) + (parseFloat(data.splitSave)||0) + (parseFloat(data.splitInvest)||0);
+      if (fd.get('splitEnabled') && data.splitMode === 'custom' && pctSum !== 100){
+        var sumEl = document.getElementById('pctSum');
+        if (sumEl){
+          sumEl.textContent = 'The three percentages have to add up to 100% — right now they make ' + pctSum + '%.';
+          sumEl.className = 'pct-sum bad';
+        }
+        return;
+      }
+      data.splitEnabled = !!fd.get('splitEnabled');
+      if (form.dataset.id){
+        saveKidWrite(form.dataset.id, data);
+      } else {
+        var wantStarter = !!fd.get('starterChores');
+        addKidWrite(data).then(function(ref){
+          if (wantStarter && ref && ref.id) seedStarterFor(ref.id);
+        });
+      }
+      closeModal();
+    } else if (kind === 'task'){
+      var taskFields = {
+        title: data.title, emoji: data.emoji || '✅',
+        value: parseFloat(data.value)||0, weeklyCap: parseInt(data.weeklyCap, 10)||0
+      };
+      if (form.dataset.id){
+        db.doc('tasks/'+form.dataset.id).update(taskFields);
+      } else {
+        taskFields.kidId = form.dataset.kid;
+        taskFields.createdAt = Date.now();
+        db.collection('tasks').add(taskFields);
+      }
+      closeModal();
+    } else if (kind === 'investvalue'){
+      db.doc('kids/'+form.dataset.kid).update({
+        investValue: parseFloat(data.value)||0,
+        investValueDate: todayISO()
+      });
+      closeModal();
+    } else if (kind === 'chore'){
+      var days = fd.getAll('days');
+      data.unpaid = !!fd.get('unpaid');
+      data.openToAll = !!fd.get('openToAll');
+      if (form.dataset.id){
+        var orig = state.chores.find(function(c){ return c.id === form.dataset.id; });
+        saveChoreWrite(form.dataset.id, data, days, orig ? orig.kidId : form.dataset.kid);
+      } else {
+        addChoreWrite(form.dataset.kid, data, days);
+      }
+      closeModal();
+    } else if (kind === 'money'){
+      addMoneyEntry(form.dataset.kind, form.dataset.kid, parseFloat(data.amount)||0, data.note, data.bucket);
+      closeModal();
+    } else if (kind === 'prize'){
+      var odds = { weight: parseFloat(data.weight) || 1, jackpot: !!fd.get('jackpot') };
+      if (form.dataset.id){
+        db.doc('rewards/'+form.dataset.id).update(
+          Object.assign({ label: data.label, emoji: data.emoji || '🎁' }, state.parentUnlocked ? odds : {}));
+      } else {
+        var kidName = 'a kid';
+        var sk2 = state.kids.find(function(x){ return x.id === form.dataset.kid; });
+        if (sk2) kidName = sk2.name;
+        db.collection('rewards').add({
+          label: data.label, emoji: data.emoji || '🎁',
+          approved: state.parentUnlocked ? true : false,
+          addedBy: state.parentUnlocked ? 'a parent' : kidName,
+          weight: state.parentUnlocked ? odds.weight : 1,
+          jackpot: state.parentUnlocked ? odds.jackpot : false,
+          createdAt: Date.now()
+        });
+      }
+      closeModal();
+    } else if (kind === 'bigjob'){
+      if (form.dataset.id){
+        db.doc('bigjobs/'+form.dataset.id).update({ title: data.title, emoji: data.emoji || '🧽' });
+      } else {
+        db.collection('bigjobs').add({ title: data.title, emoji: data.emoji || '🧽', createdAt: Date.now() });
+      }
+      closeModal();
+    } else if (kind === 'settings'){
+      var payload = {
+        familyName: data.familyName || 'Our Family',
+        requireApproval: !!fd.get('requireApproval'),
+        showLeaderboard: !!fd.get('showLeaderboard')
+      };
+      if (data.pin && /^[0-9]{4}$/.test(data.pin)) payload.pin = data.pin;
+      db.doc('config/app').set(Object.assign({}, state.config, payload));
+      closeModal();
+    } else if (kind === 'pin'){
+      var entered = data.pin || '';
+      if (entered === (state.config.pin || '1234')){
+        state.parentUnlocked = true;
+        closeModal();
+        render();
+      } else {
+        var err = document.getElementById('pinErr');
+        if (err) err.textContent = 'That’s not the PIN. Ask a parent.';
+      }
+    }
+  });
+
+  document.getElementById('overlay').addEventListener('click', function(e){
+    if (e.target.id === 'overlay') closeModal();
+  });
+
+  // the wheel is painted, not styled — repaint it when the canvas size or theme changes
+  var resizeTimer = null;
+  window.addEventListener('resize', function(){
+    if (state.spinning) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(redrawWheel, 120);
+  });
+  if (window.matchMedia){
+    var themeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    if (themeQuery.addEventListener) themeQuery.addEventListener('change', function(){ redrawWheel(); });
+  }
+
+
+  /* ---------------- local store (this browser, this device) ---------------- */
+
+  var LS_KEY = 'earnIt.store.v1';
+  var storageOK = true;
+
+  function storageWorks(){
+    try {
+      var k = '__earnit_test__';
+      localStorage.setItem(k, '1');
+      localStorage.removeItem(k);
+      return true;
+    } catch(e){ return false; }
+  }
+
+  function loadStore(){
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(e){}
+    return null;
+  }
+
+  function persist(store){
+    if (!storageOK) return;
+    try { localStorage.setItem(LS_KEY, JSON.stringify(store)); }
+    catch(e){
+      storageOK = false;
+      showStorageWarning('This browser just refused to save any more. Your ledger is still on screen, but new changes won’t survive a refresh — take a backup from Parent Mode.');
+    }
+  }
+
+  function showStorageWarning(msg){
+    var slot = document.getElementById('storageWarn');
+    if (!slot) return;
+    slot.innerHTML = '<div class="warn-bar"><strong>Heads up.</strong> ' + esc(msg) + '</div>';
+  }
+
+  function backupData(){
+    var raw = localStorage.getItem(LS_KEY);
+    if (!raw){ try { raw = JSON.stringify(LIVE_STORE); } catch(e){ raw = '{}'; } }
+    var blob = new Blob([raw], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'earn-it-backup-' + todayISO() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(url); a.parentNode && a.parentNode.removeChild(a); }, 1500);
+  }
+
+  function restoreData(){
+    var input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.addEventListener('change', function(){
+      var f = input.files && input.files[0];
+      if (!f) return;
+      var rd = new FileReader();
+      rd.onload = function(){
+        var parsed = null;
+        try { parsed = JSON.parse(rd.result); } catch(e){}
+        if (!parsed || typeof parsed !== 'object' || !parsed.kids){
+          openModal('<h3>That file didn’t read as a backup</h3>' +
+            '<div class="modal-note">Pick the .json file that “Back up to a file” produced. Nothing was changed.</div>' +
+            '<div class="modal-actions"><button type="button" class="btn primary" data-action="close-modal">OK</button></div>');
+          return;
+        }
+        try { localStorage.setItem(LS_KEY, JSON.stringify(parsed)); } catch(e){}
+        location.reload();
+      };
+      rd.readAsText(f);
+    });
+    input.click();
+  }
+
+  var LIVE_STORE = null;
+
+  function makeLocalDb(store){
+    LIVE_STORE = store;
+    var listeners = [];
+
+    function ensure(col){ if (!store[col]) store[col] = {}; }
+    function meta(){ return { fromCache:false, hasPendingWrites:false }; }
+
+    function colSnap(col){
+      var docs = Object.keys(store[col] || {}).map(function(id){
+        var body = store[col][id];
+        return { id:id, exists:true, data:function(){ return body; }, metadata:meta() };
+      });
+      return { docs:docs, size:docs.length, empty:!docs.length, docChanges:function(){ return []; }, metadata:meta() };
+    }
+    function docSnap(col, id){
+      var body = (store[col] || {})[id];
+      return { id:id, exists:!!body, data:function(){ return body; }, metadata:meta() };
+    }
+    function changed(){
+      persist(store);
+      setTimeout(function(){
+        listeners.forEach(function(l){
+          l.cb(l.type === 'col' ? colSnap(l.col) : docSnap(l.col, l.id));
+        });
+      }, 0);
+    }
+
+    function docRef(col, id){
+      return {
+        id: id,
+        path: col + '/' + id,
+        get: function(){ return Promise.resolve(docSnap(col, id)); },
+        set: function(data){
+          ensure(col); store[col][id] = JSON.parse(JSON.stringify(data)); changed();
+          return Promise.resolve();
+        },
+        update: function(data){
+          ensure(col);
+          if (!store[col][id]) return Promise.reject({ code:'invalid_argument', message:'no such document' });
+          Object.assign(store[col][id], JSON.parse(JSON.stringify(data))); changed();
+          return Promise.resolve();
+        },
+        'delete': function(){
+          if (store[col]) delete store[col][id];
+          changed();
+          return Promise.resolve();
+        },
+        onSnapshot: function(cb){
+          listeners.push({ type:'doc', col:col, id:id, cb:cb });
+          setTimeout(function(){ cb(docSnap(col, id)); }, 0);
+          return function(){};
+        },
+        collection: function(){ return null; }
+      };
+    }
+
+    return {
+      doc: function(path){
+        var parts = path.split('/');
+        return docRef(parts[0], parts.slice(1).join('/'));
+      },
+      collection: function(path){
+        return {
+          path: path,
+          doc: function(id){ return docRef(path, id); },
+          add: function(data){
+            ensure(path);
+            var id = 'k' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+            store[path][id] = JSON.parse(JSON.stringify(data));
+            changed();
+            return Promise.resolve(docRef(path, id));
+          },
+          onSnapshot: function(cb){
+            listeners.push({ type:'col', col:path, cb:cb });
+            setTimeout(function(){ cb(colSnap(path)); }, 0);
+            return function(){};
+          }
+        };
+      }
+    };
+  }
+
+  // First run only: stock both wheels, leave the kids for you to add.
+  function firstRunStore(){
+    return {
+      config: { app: { pin:'1234', familyName:'Our Family' } },
+      kids: {},
+      chores: {},
+      log: {},
+      quests: {},
+      bigjobs: {
+        job_car:      { title:'Vacuum the car', emoji:'🚗', createdAt:1 },
+        job_bathroom: { title:'Scrub the bathroom', emoji:'🧽', createdAt:2 },
+        job_windows:  { title:'Wash windows', emoji:'🪟', createdAt:3 },
+        job_fridge:   { title:'Clean the fridge', emoji:'🧊', createdAt:4 },
+        job_floors:   { title:'Sweep + mop', emoji:'🧹', createdAt:5 },
+        job_pantry:   { title:'Organize pantry', emoji:'🗄️', createdAt:6 },
+        job_weeds:    { title:'Pull weeds', emoji:'🌿', createdAt:7 }
+      },
+      rewards: {
+        rw_movie:      { label:"Pick Friday's movie", emoji:'🎬', approved:true, addedBy:'a parent', createdAt:1 },
+        rw_dinner:     { label:'Choose dinner one night', emoji:'🍕', approved:true, addedBy:'a parent', createdAt:2 },
+        rw_latenight:  { label:'Stay up 30 min late', emoji:'⏰', approved:true, addedBy:'a parent', createdAt:3 },
+        rw_screen:     { label:'30 min extra screen time', emoji:'🎮', approved:true, addedBy:'a parent', createdAt:4 },
+        rw_icecream:   { label:'Ice cream run', emoji:'🍦', approved:true, addedBy:'a parent', createdAt:5 },
+        rw_skipdishes: { label:'Skip one dish night', emoji:'🎟️', approved:true, addedBy:'a parent', createdAt:6 }
+      }
+    };
+  }
+
+  /* ---------------- boot ---------------- */
+
+
+  function subscribeAll(){
+    db.collection('kids').onSnapshot(function(snap){
+      state.kids = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); })
+        .sort(function(a,b){ return (a.createdAt||0)-(b.createdAt||0); });
+      state.ready.kids = true; render();
+    }, function(){ state.ready.kids = true; render(); });
+
+    db.collection('chores').onSnapshot(function(snap){
+      state.chores = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      state.ready.chores = true; render();
+    }, function(){ state.ready.chores = true; render(); });
+
+    db.collection('log').onSnapshot(function(snap){
+      state.logs = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      state.ready.logs = true; render();
+    }, function(){ state.ready.logs = true; render(); });
+
+    db.doc('config/app').onSnapshot(function(snap){
+      state.config = snap.exists
+        ? Object.assign({pin:'1234', familyName:'Our Family', requireApproval:false, showLeaderboard:false}, snap.data())
+        : {pin:'1234', familyName:'Our Family', requireApproval:false, showLeaderboard:false};
+      state.ready.config = true; render();
+    }, function(){ state.ready.config = true; render(); });
+
+    db.collection('bigjobs').onSnapshot(function(snap){
+      state.bigjobs = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); })
+        .sort(function(a,b){ return (a.createdAt||0)-(b.createdAt||0); });
+      state.ready.bigjobs = true; render();
+    }, function(){ state.ready.bigjobs = true; render(); });
+
+    db.collection('rewards').onSnapshot(function(snap){
+      state.rewards = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); })
+        .sort(function(a,b){ return (a.createdAt||0)-(b.createdAt||0); });
+      state.ready.rewards = true; render();
+    }, function(){ state.ready.rewards = true; render(); });
+
+    db.collection('quests').onSnapshot(function(snap){
+      state.quests = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      state.ready.quests = true; render();
+    }, function(){ state.ready.quests = true; render(); });
+
+    db.collection('tasks').onSnapshot(function(snap){
+      state.tasks = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      state.ready.tasks = true; render();
+    }, function(){ state.ready.tasks = true; render(); });
+
+    db.collection('owed').onSnapshot(function(snap){
+      state.owed = snap.docs.map(function(d){ return Object.assign({id:d.id}, d.data()); });
+      state.ready.owed = true; render();
+    }, function(){ state.ready.owed = true; render(); });
+  }
+
+  storageOK = storageWorks();
+  var startStore = storageOK ? loadStore() : null;
+  if (!startStore) startStore = firstRunStore();
+  db = makeLocalDb(startStore);
+  if (storageOK) persist(startStore);
+  else {
+    showStorageWarning('This browser won’t let a file opened from your computer save data, so nothing here will survive a refresh. Opening it in Chrome or Firefox usually fixes it.');
+  }
+  subscribeAll();
+})();
+</script>
+
+</body>
+</html>
