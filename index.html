@@ -1,1 +1,1231 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><title>Earn It • Multi-Kid Chore Tracker</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;700&display=swap"><style>:root{--bg:#fef8f6;--surface:#ffffff;--surface-2:#fef3f0;--ink:#1f1f1f;--ink-soft:#6b7280;--ink-faint:#9ca3af;--line:#f0e5e1;--line-strong:#e8d4cf;--accent:#FF5E78;--accent-soft:#ffe8ed;--pine:#6BCFB8;--pine-soft:#e1f8f5;--rust:#FF5E78;--rust-soft:#ffe8ed;--shadow:0 1px 0 rgba(31,31,31,0.05),0 8px 20px -12px rgba(31,31,31,0.15);--radius:14px;}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a0e0c;--surface:#2d1a17;--surface-2:#251410;--ink:#f5f5f5;--ink-soft:#d1d5db;--ink-faint:#9ca3af;--line:#4a2620;--line-strong:#6b3a2f;--accent:#FF7A94;--accent-soft:#3d1721;--pine:#7fdfcc;--pine-soft:#1a3a35;--rust:#FF7A94;--rust-soft:#3d1721;--shadow:0 1px 0 rgba(0,0,0,0.3),0 8px 24px -12px rgba(0,0,0,0.5);}}*{box-sizing:border-box;}html{-webkit-text-size-adjust:100%;}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,'Segoe UI',system-ui,sans-serif;padding:0 16px 80px;line-height:1.45;}h1,h2,h3{font-family:Outfit,system-ui,sans-serif;text-wrap:balance;margin:0;font-weight:700;}.wrap{max-width:760px;margin:0 auto;}button{font-family:inherit;cursor:pointer;}input,select,textarea{font-family:inherit;}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:22px 0 14px;border-bottom:3px double var(--line-strong);flex-wrap:wrap;}.brand{display:flex;align-items:center;gap:10px;}.brand-mark{width:38px;height:38px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-family:Outfit;font-weight:800;font-size:1.15rem;flex:none;}.brand h1{font-size:1.5rem;font-weight:700;}.brand small{font-size:0.72rem;text-transform:uppercase;color:var(--ink-faint);font-weight:600;}.kid-tabs{display:flex;gap:8px;overflow-x:auto;padding:16px 0 4px;}.kid-tab{flex:none;display:flex;align-items:center;gap:8px;padding:9px 16px;background:var(--surface-2);border:1px solid var(--line);border-bottom:3px solid var(--line);border-radius:10px 10px 4px 4px;font-weight:700;cursor:pointer;}.kid-tab.active{background:var(--surface);border-bottom-color:var(--accent);color:var(--ink);}.kid-tab .remove-kid{margin-left:6px;font-size:0.9rem;cursor:pointer;color:var(--rust);}.setup-screen{display:flex;flex-direction:column;gap:20px;text-align:center;}.setup-section{display:flex;flex-direction:column;gap:12px;}.age-picker{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px;}.age-option{padding:8px 16px;border:2px solid var(--line-strong);border-radius:8px;background:var(--surface-2);font-weight:600;cursor:pointer;transition:all .2s;}.age-option:hover{border-color:var(--accent);}.age-option.selected{background:var(--accent);color:#fff;border-color:var(--accent);}.add-kid-btn{background:var(--pine);color:#fff;border:none;padding:10px 20px;border-radius:8px;font-weight:700;cursor:pointer;width:100%;margin-top:12px;}.add-kid-btn:active{transform:scale(0.96);}main{padding-top:18px;display:flex;flex-direction:column;gap:18px;}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}.card-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:14px;flex-wrap:wrap;}.card-head h2{font-size:1.05rem;}.balance-large{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:clamp(2rem,9vw,2.8rem);color:var(--pine);line-height:1;}.label-small{font-size:0.72rem;text-transform:uppercase;color:var(--ink-faint);font-weight:700;}.wheel-container{display:flex;gap:22px;align-items:center;flex-wrap:wrap;}.wheel-canvas{position:relative;width:min(280px,75vw);flex:none;margin:0 auto;}.wheel-canvas canvas{display:block;width:100%;aspect-ratio:1/1;border-radius:50%;}.wheel-pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);z-index:2;width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;border-top:20px solid var(--ink);filter:drop-shadow(0 1px 1px rgba(0,0,0,0.25));}.wheel-info{flex:1;min-width:200px;}.task-display{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:12px;background:var(--surface-2);border:1px dashed var(--line-strong);margin:12px 0;}.task-emoji{font-size:1.9rem;flex:none;}.task-title{font-family:Outfit;font-weight:700;font-size:1.05rem;}.task-points{font-size:0.85rem;color:var(--ink-soft);}.spin-btn{background:var(--accent);border:none;color:#fff;padding:12px 24px;border-radius:10px;font-weight:700;font-size:1rem;cursor:pointer;display:block;width:100%;}.spin-btn:active{transform:scale(0.96);}.spin-btn[disabled]{opacity:0.5;cursor:not-allowed;}.reward-bank{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:12px;}.reward-card{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center;}.reward-emoji{font-size:1.8rem;margin-bottom:6px;}.reward-name{font-family:Outfit;font-weight:700;font-size:0.95rem;margin-bottom:4px;}.reward-cost{font-family:'IBM Plex Mono';font-size:0.8rem;color:var(--ink-soft);}.reward-btn{background:var(--pine);color:#fff;border:none;border-radius:8px;padding:6px 12px;font-size:0.8rem;font-weight:700;cursor:pointer;width:100%;margin-top:8px;}.reward-btn[disabled]{opacity:0.5;}.approval-queue{background:var(--accent-soft);border:1px solid var(--accent);border-radius:10px;padding:12px;margin:12px 0;}.approval-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);font-size:0.9rem;}.approval-item:last-child{border-bottom:none;}.approval-btns{display:flex;gap:6px;}.btn{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:8px 12px;border-radius:8px;font-weight:600;font-size:0.8rem;cursor:pointer;}.btn.approve{background:var(--pine);color:#fff;border-color:var(--pine);}.btn.reject{background:var(--rust);color:#fff;border-color:var(--rust);}.btn.edit{background:var(--accent);color:#fff;border-color:var(--accent);margin-top:12px;}.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;}.modal.open{display:flex;}.modal-content{background:var(--surface);border-radius:var(--radius);padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}.modal-close{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--ink-faint);}.item-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}.item-row{display:flex;align-items:center;gap:8px;padding:12px;background:var(--surface-2);border-radius:8px;}.item-row input{flex:1;padding:8px;border:1px solid var(--line);border-radius:6px;font-size:0.9rem;}.item-row .remove-btn{background:var(--rust);color:#fff;border:none;border-radius:6px;padding:6px 12px;cursor:pointer;font-size:0.8rem;}.add-item-section{display:flex;flex-direction:column;gap:8px;}.add-item-section input{padding:10px;border:1px solid var(--line);border-radius:8px;font-size:0.9rem;}.cooldown-bar{height:8px;border-radius:4px;background:var(--line);margin:10px 0;}.cooldown-fill{display:block;height:100%;background:var(--accent);border-radius:4px;}.footer{text-align:center;color:var(--ink-faint);font-size:0.78rem;padding:28px 0 0;}</style></head><body><div class="wrap" id="app"><div class="topbar"><div class="brand"><div class="brand-mark">✨</div><div><h1>Earn It</h1><small>Multi-Kid Edition</small></div></div></div><div id="setupView" class="setup-screen"><h2>Let's set up your family!</h2><div id="kidsSetupContainer"></div><button class="add-kid-btn" onclick="addKidSetup()">+ Add Another Kid</button><button class="spin-btn" onclick="startApp()" style="margin-top:20px;">Start Tracking 🚀</button></div><div id="mainView" hidden><div class="kid-tabs" id="kidTabs"></div><main id="mainContent"></main></div></div><div id="taskModal" class="modal"><div class="modal-content"><div class="modal-head"><h2>Edit Tasks</h2><button class="modal-close" onclick="closeTaskModal()">✕</button></div><div id="taskList" class="item-list"></div><div class="add-item-section"><input type="text" id="newTaskTitle" placeholder="Task name"><input type="text" id="newTaskEmoji" placeholder="Emoji" maxlength="2"><input type="number" id="newTaskPoints" placeholder="Points" min="1" max="100"><button class="spin-btn" onclick="addTask()">Add Task</button></div></div></div><div id="rewardModal" class="modal"><div class="modal-content"><div class="modal-head"><h2>Edit Rewards</h2><button class="modal-close" onclick="closeRewardModal()">✕</button></div><div id="rewardList" class="item-list"></div><div class="add-item-section"><input type="text" id="newRewardTitle" placeholder="Reward name"><input type="text" id="newRewardEmoji" placeholder="Emoji" maxlength="2"><input type="number" id="newRewardCost" placeholder="Cost" min="1" max="999"><button class="spin-btn" onclick="addReward()">Add Reward</button></div></div></div><footer class="footer">Earn It • Multi-Kid Chore & Allowance Tracker • Data saved locally 💾</footer><script>"use strict";const KID_EMOJIS=['🧒','👦','👧','🐣','⭐','🦊','🐼','🎨'];const AGE_TASKS={6:[{title:'Feed pet',emoji:'🐕',points:3},{title:'Pick up toys',emoji:'🧸',points:3},{title:'Help water plants',emoji:'🌱',points:4},{title:'Wipe table',emoji:'🧹',points:4}],7:[{title:'Feed pet',emoji:'🐕',points:4},{title:'Take out trash',emoji:'🚮',points:5},{title:'Set table',emoji:'🍽️',points:5},{title:'Sweep kitchen',emoji:'🧹',points:6}],8:[{title:'Unload dishwasher',emoji:'🍽️',points:6},{title:'Vacuum room',emoji:'🧹',points:7},{title:'Fold laundry',emoji:'👕',points:7},{title:'Yard work',emoji:'🌱',points:8}],9:[{title:'Clean bathroom',emoji:'🧽',points:8},{title:'Load dishwasher',emoji:'🍽️',points:6},{title:'Do laundry',emoji:'👕',points:8},{title:'Deep clean room',emoji:'🧹',points:10}],10:[{title:'Clean bathroom',emoji:'🧽',points:9},{title:'Mow lawn',emoji:'🌱',points:15},{title:'Organize garage',emoji:'🔧',points:12},{title:'Cook simple meal',emoji:'🍳',points:10}],11:[{title:'Pressure wash deck',emoji:'🌊',points:18},{title:'Wash car',emoji:'🚗',points:12},{title:'Yard project',emoji:'🌱',points:16},{title:'House cleaning',emoji:'🧹',points:14}],12:[{title:'Deep yard work',emoji:'🌱',points:20},{title:'Help with renovation',emoji:'🔨',points:25},{title:'Babysit sibling',emoji:'👶',points:15},{title:'Complex repairs',emoji:'🔧',points:20}],13:[{title:'Landscaping',emoji:'🌳',points:25},{title:'Home repairs',emoji:'🔧',points:20},{title:'Yard work',emoji:'🌱',points:18},{title:'Pet care',emoji:'🐕',points:12}],14:[{title:'Advanced repairs',emoji:'🔧',points:30},{title:'Project planning',emoji:'📋',points:20},{title:'Yard maintenance',emoji:'🌱',points:22},{title:'Babysitting',emoji:'👶',points:25}],15:[{title:'Home improvement',emoji:'🏠',points:35},{title:'Technical tasks',emoji:'💻',points:25},{title:'Landscaping design',emoji:'🌳',points:30},{title:'Responsibility tasks',emoji:'✅',points:20}],16:[{title:'Car maintenance',emoji:'🚗',points:40},{title:'Home repairs',emoji:'🔧',points:35},{title:'Project management',emoji:'📋',points:30},{title:'Advanced yard work',emoji:'🌱',points:28}],17:[{title:'Complex projects',emoji:'🏗️',points:50},{title:'Home renovation',emoji:'🏠',points:45},{title:'Business tasks',emoji:'💼',points:35},{title:'Leadership roles',emoji:'👨‍💼',points:30}],18:[{title:'Major projects',emoji:'🏗️',points:60},{title:'Home improvement',emoji:'🏠',points:50},{title:'Business management',emoji:'💼',points:45},{title:'Career development',emoji:'🎓',points:40}]};const DEFAULT_REWARDS=[{title:'Movie night',emoji:'🎬',cost:20},{title:'Ice cream',emoji:'🍦',cost:15},{title:'Gaming time',emoji:'🎮',cost:25},{title:'Pizza dinner',emoji:'🍕',cost:30},{title:'Special outing',emoji:'🎡',cost:50}];let state={kids:[],tasks:{},rewards:{},approvals:{},balance:{},quest:{},setupComplete:false};let editingKidId=null;function $(id){return document.getElementById(id);}function saveState(){localStorage.setItem('earnItState',JSON.stringify(state));}function loadState(){const saved=localStorage.getItem('earnItState');if(saved){state=JSON.parse(saved);renderApp();}else{initializeDefaults();}}function initializeDefaults(){state.kids=[{id:'kid1',name:'Kid 1',age:10,emoji:'👦'},{id:'kid2',name:'Kid 2',age:11,emoji:'👧'}];state.kids.forEach(kid=>{state.tasks[kid.id]=(AGE_TASKS[kid.age]||AGE_TASKS[10]).map((t,i)=>({...t,id:'t'+i}));state.rewards[kid.id]=DEFAULT_REWARDS.map((r,i)=>({...r,id:'r'+i}));state.balance[kid.id]=0;state.approvals[kid.id]=[];state.quest[kid.id]={status:'idle',taskId:null,timer:0};});state.setupComplete=true;saveState();renderApp();}function addKidSetup(){const container=$('kidsSetupContainer');const kidNum=container.children.length+1;const div=document.createElement('div');div.className='setup-section';div.innerHTML=`<div><h3>Kid ${kidNum}</h3><input type="text" placeholder="Name" class="kid-name-input" style="padding:10px;border:1px solid var(--line-strong);border-radius:8px;width:100%;max-width:200px;margin:8px auto 0;display:block;"><div style="margin-top:8px;">Age:</div><div class="age-picker kid-age-picker"><div class="age-option" onclick="selectAge(this)">6</div><div class="age-option" onclick="selectAge(this)">7</div><div class="age-option" onclick="selectAge(this)">8</div><div class="age-option" onclick="selectAge(this)">9</div><div class="age-option" onclick="selectAge(this)">10</div><div class="age-option" onclick="selectAge(this)">11</div><div class="age-option" onclick="selectAge(this)">12</div><div class="age-option" onclick="selectAge(this)">13</div><div class="age-option" onclick="selectAge(this)">14</div><div class="age-option" onclick="selectAge(this)">15</div><div class="age-option" onclick="selectAge(this)">16</div><div class="age-option" onclick="selectAge(this)">17</div><div class="age-option" onclick="selectAge(this)">18</div></div></div>`;container.appendChild(div);}function selectAge(el){const picker=el.closest('.kid-age-picker');picker.querySelectorAll('.selected').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}function startApp(){const kids=[];const sections=document.querySelectorAll('.setup-section');let valid=true;sections.forEach((sec,idx)=>{const name=sec.querySelector('.kid-name-input').value.trim();const ageEl=sec.querySelector('.age-option.selected');if(!name||!ageEl){valid=false;return;}const age=parseInt(ageEl.textContent);const kidId='kid'+(idx+1);kids.push({id:kidId,name,age,emoji:KID_EMOJIS[idx%KID_EMOJIS.length]});});if(!valid){alert('Fill in all names and ages');return;}state.kids=kids;kids.forEach(kid=>{state.tasks[kid.id]=(AGE_TASKS[kid.age]||AGE_TASKS[10]).map((t,i)=>({...t,id:'t'+i}));state.rewards[kid.id]=DEFAULT_REWARDS.map((r,i)=>({...r,id:'r'+i}));state.balance[kid.id]=0;state.approvals[kid.id]=[];state.quest[kid.id]={status:'idle',taskId:null,timer:0};});state.setupComplete=true;saveState();renderApp();}function renderApp(){$('setupView').hidden=state.setupComplete;$('mainView').hidden=!state.setupComplete;if(!state.setupComplete)return;renderKidTabs();renderMainContent();}function renderKidTabs(){const tabs=$('kidTabs');tabs.innerHTML='';state.kids.forEach((kid,idx)=>{const tab=document.createElement('div');tab.className='kid-tab'+(idx===0?' active':'');tab.innerHTML=`<span>${kid.emoji} ${kid.name}</span><span class="remove-kid" onclick="removeKid('${kid.id}')">✕</span>`;tab.onclick=(e)=>{if(!e.target.closest('.remove-kid')){selectKid(kid.id);}};tabs.appendChild(tab);});const addTab=document.createElement('div');addTab.className='kid-tab';addTab.innerHTML='<span>+ Add Kid</span>';addTab.onclick=()=>openAddKidModal();tabs.appendChild(addTab);}function removeKid(kidId){if(state.kids.length<=1){alert('Need at least 1 kid');return;}if(confirm('Remove this kid?')){state.kids=state.kids.filter(k=>k.id!==kidId);delete state.tasks[kidId];delete state.rewards[kidId];delete state.balance[kidId];delete state.approvals[kidId];delete state.quest[kidId];saveState();renderKidTabs();renderMainContent();}}function openAddKidModal(){const name=prompt('Kid name:');if(!name)return;const ageStr=prompt('Kid age (6-18):');const age=parseInt(ageStr);if(!age||age<6||age>18){alert('Invalid age');return;}const kidId='kid_'+Date.now();state.kids.push({id:kidId,name,age,emoji:KID_EMOJIS[state.kids.length%KID_EMOJIS.length]});state.tasks[kidId]=(AGE_TASKS[age]||AGE_TASKS[10]).map((t,i)=>({...t,id:'t'+i}));state.rewards[kidId]=DEFAULT_REWARDS.map((r,i)=>({...r,id:'r'+i}));state.balance[kidId]=0;state.approvals[kidId]=[];state.quest[kidId]={status:'idle',taskId:null,timer:0};saveState();renderKidTabs();renderMainContent();}function selectKid(kidId){document.querySelectorAll('.kid-tab').forEach(t=>t.classList.remove('active'));event.target.closest('.kid-tab').classList.add('active');renderMainContent(kidId);}function renderMainContent(kidId=state.kids[0]?.id){if(!state.kids.length)return;const kid=state.kids.find(k=>k.id===kidId);if(!kid)return;const balance=state.balance[kidId]||0;const quest=state.quest[kidId];const approvals=state.approvals[kidId]||[];const tasks=state.tasks[kidId]||[];let html=`<div class="card"><div class="card-head"><div><div class="label-small">${kid.name}'s Reward Bank</div><div class="balance-large">$${balance.toFixed(2)}</div></div></div><div class="reward-bank">${(state.rewards[kidId]||[]).map(r=>`<div class="reward-card"><div class="reward-emoji">${r.emoji}</div><div class="reward-name">${r.title}</div><div class="reward-cost">$${r.cost}</div><button class="reward-btn" ${balance<r.cost?'disabled':''} onclick="claimReward('${kidId}','${r.id}')">Claim</button></div>`).join('')}</div><button class="btn edit" onclick="openRewardModal('${kidId}')">⚙️ Edit Rewards</button></div>`;html+=`<div class="card"><div class="card-head"><h2>Spin the Wheel</h2></div>${renderWheel(kidId)}</div>`;html+=`<div class="card"><div class="card-head"><h2>Approval Queue</h2></div>${approvals.length>0?`<div class="approval-queue">${approvals.map((a,i)=>`<div class="approval-item"><span>${a.task.emoji} <strong>${a.task.title}</strong> — ${a.task.points} pts</span><div class="approval-btns"><button class="btn approve" onclick="approveTask('${kidId}',${i})">Approve</button><button class="btn reject" onclick="rejectTask('${kidId}',${i})">Reject</button></div></div>`).join('')}</div>`:'<p style="color:var(--ink-faint);">No tasks pending approval</p>'}</div>`;html+=`<button class="btn edit" onclick="openTaskModal('${kidId}')">✏️ Edit Tasks</button>`;$('mainContent').innerHTML=html;setTimeout(()=>{if($('wheelCanvas')){drawWheel(kidId,tasks);}},50);}function renderWheel(kidId){const tasks=state.tasks[kidId]||[];const quest=state.quest[kidId];let html=`<div class="wheel-container"><div class="wheel-canvas"><canvas id="wheelCanvas"></canvas><div class="wheel-pointer"></div></div><div class="wheel-info">`;if(quest.status==='spinning'){html+=`<p style="color:var(--ink-soft);">🌀 Spinning...</p>`;}else if(quest.status==='cooldown'){html+=`<p style="color:var(--ink-soft);">⏱️ Cooldown...</p><div class="cooldown-bar"><div class="cooldown-fill" id="cooldownBar"></div></div><p style="font-size:0.85rem;color:var(--ink-faint);"><span id="cooldownTime">15:00</span></p>`;}else if(quest.taskId){const task=tasks.find(t=>t.id===quest.taskId);if(task){html+=`<div class="task-display"><div class="task-emoji">${task.emoji}</div><div><div class="task-title">${task.title}</div><div class="task-points">${task.points} pts</div></div></div><button class="spin-btn" onclick="submitTask('${kidId}','${task.id}')">Done! ✅</button>`;}}else{html+=`<button class="spin-btn" onclick="spinWheel('${kidId}')" ${quest.status==='cooldown'?'disabled':''}>Spin! 🎡</button>`;}html+=`</div></div>`;return html;}function drawWheel(kidId,tasks){const canvas=$('wheelCanvas');if(!canvas||!tasks.length)return;const ctx=canvas.getContext('2d');const size=canvas.parentElement.offsetWidth;canvas.width=size;canvas.height=size;const cx=size/2,cy=size/2,r=size/2-8;const colors=['#FF5E78','#FFD93D','#6BCFB8','#B373FF','#FFB84D','#FF9F1C'];const n=Math.min(6,tasks.length);const slice=Math.PI*2/n;for(let i=0;i<n;i++){const a1=i*slice,a2=a1+slice;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,a1,a2);ctx.closePath();ctx.fillStyle=colors[i%colors.length];ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();const task=tasks[i%tasks.length],a=a1+slice/2,tx=cx+Math.cos(a)*r*0.65,ty=cy+Math.sin(a)*r*0.65;ctx.fillStyle='#fff';ctx.font='bold 24px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(task.emoji,tx,ty);}}function spinWheel(kidId){const quest=state.quest[kidId],tasks=state.tasks[kidId];if(!tasks.length||quest.status==='cooldown')return;quest.status='spinning';renderMainContent(kidId);setTimeout(()=>{quest.taskId=tasks[Math.floor(Math.random()*tasks.length)].id;quest.status='active';renderMainContent(kidId);saveState();},1500);}function submitTask(kidId,taskId){const task=state.tasks[kidId].find(t=>t.id===taskId);if(!task)return;state.approvals[kidId].push({task,taskId});state.quest[kidId]={status:'cooldown',taskId:null,timer:15*60};saveState();renderMainContent(kidId);const interval=setInterval(()=>{state.quest[kidId].timer--;if(state.quest[kidId].timer<=0){clearInterval(interval);state.quest[kidId]={status:'idle',taskId:null,timer:0};renderMainContent(kidId);saveState();}else{saveState();}},1000);}function approveTask(kidId,idx){state.balance[kidId]+=state.approvals[kidId][idx].task.points;state.approvals[kidId].splice(idx,1);saveState();renderMainContent(kidId);}function rejectTask(kidId,idx){state.approvals[kidId].splice(idx,1);saveState();renderMainContent(kidId);}function claimReward(kidId,rewardId){const r=state.rewards[kidId].find(x=>x.id===rewardId);if(r&&state.balance[kidId]>=r.cost){state.balance[kidId]-=r.cost;saveState();renderMainContent(kidId);}}function openTaskModal(kidId){editingKidId=kidId;const list=$('taskList');list.innerHTML='';(state.tasks[kidId]||[]).forEach(t=>{const div=document.createElement('div');div.className='item-row';div.innerHTML=`<input type="text" value="${t.emoji}" maxlength="2" onchange="updateTaskField('${kidId}','${t.id}','emoji',this.value)"><input type="text" value="${t.title}" onchange="updateTaskField('${kidId}','${t.id}','title',this.value)"><input type="number" value="${t.points}" min="1" onchange="updateTaskField('${kidId}','${t.id}','points',parseInt(this.value))"><button class="remove-btn" onclick="removeTask('${kidId}','${t.id}')">✕</button>`;list.appendChild(div);});$('taskModal').classList.add('open');}function updateTaskField(kidId,taskId,field,value){const t=state.tasks[kidId].find(x=>x.id===taskId);if(t){t[field]=value;saveState();}}function removeTask(kidId,taskId){state.tasks[kidId]=state.tasks[kidId].filter(t=>t.id!==taskId);saveState();openTaskModal(kidId);}function addTask(){const title=$('newTaskTitle').value.trim(),emoji=$('newTaskEmoji').value.trim(),points=parseInt($('newTaskPoints').value);if(!title||!emoji||!points){alert('Fill all fields');return;}state.tasks[editingKidId].push({id:'t'+Date.now(),title,emoji,points});$('newTaskTitle').value='';$('newTaskEmoji').value='';$('newTaskPoints').value='';saveState();openTaskModal(editingKidId);}function closeTaskModal(){$('taskModal').classList.remove('open');}function openRewardModal(kidId){editingKidId=kidId;const list=$('rewardList');list.innerHTML='';(state.rewards[kidId]||[]).forEach(r=>{const div=document.createElement('div');div.className='item-row';div.innerHTML=`<input type="text" value="${r.emoji}" maxlength="2" onchange="updateRewardField('${kidId}','${r.id}','emoji',this.value)"><input type="text" value="${r.title}" onchange="updateRewardField('${kidId}','${r.id}','title',this.value)"><input type="number" value="${r.cost}" min="1" onchange="updateRewardField('${kidId}','${r.id}','cost',parseInt(this.value))"><button class="remove-btn" onclick="removeReward('${kidId}','${r.id}')">✕</button>`;list.appendChild(div);});$('rewardModal').classList.add('open');}function updateRewardField(kidId,rewardId,field,value){const r=state.rewards[kidId].find(x=>x.id===rewardId);if(r){r[field]=value;saveState();}}function removeReward(kidId,rewardId){state.rewards[kidId]=state.rewards[kidId].filter(r=>r.id!==rewardId);saveState();openRewardModal(kidId);}function addReward(){const title=$('newRewardTitle').value.trim(),emoji=$('newRewardEmoji').value.trim(),cost=parseInt($('newRewardCost').value);if(!title||!emoji||!cost){alert('Fill all fields');return;}state.rewards[editingKidId].push({id:'r'+Date.now(),title,emoji,cost});$('newRewardTitle').value='';$('newRewardEmoji').value='';$('newRewardCost').value='';saveState();openRewardModal(editingKidId);}function closeRewardModal(){$('rewardModal').classList.remove('open');}loadState();</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn It - Family Chore & Allowance Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-parent {
+            background: #FF9800;
+            color: white;
+        }
+
+        .content {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .card h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .card h3 {
+            font-size: 1.1em;
+            margin: 15px 0 10px 0;
+            color: #333;
+        }
+
+        .kid-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .kid-btn {
+            padding: 8px 16px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .kid-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .balance-display {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #4CAF50;
+            margin: 10px 0;
+        }
+
+        .money-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .money-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            text-align: center;
+        }
+
+        .money-box.spend {
+            border-left-color: #f44336;
+        }
+
+        .money-box.save {
+            border-left-color: #4CAF50;
+        }
+
+        .money-box.invest {
+            border-left-color: #FF9800;
+        }
+
+        .money-box-label {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .money-box-amount {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .goal-tracker {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .goal-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .goal-progress {
+            width: 100%;
+            height: 20px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .goal-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
+        }
+
+        .goal-text {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .chore-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .chore-table th,
+        .chore-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #eee;
+        }
+
+        .chore-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .chore-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .chore-name {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .chore-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .wheel-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        canvas {
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-width: 300px;
+            width: 100%;
+        }
+
+        .wheel-result {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            color: #856404;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ledger-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .ledger-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ledger-item.positive {
+            border-left-color: #4CAF50;
+        }
+
+        .ledger-item.negative {
+            border-left-color: #f44336;
+        }
+
+        .ledger-item-left {
+            flex: 1;
+        }
+
+        .ledger-item-date {
+            font-size: 0.85em;
+            color: #999;
+        }
+
+        .ledger-item-amount {
+            font-weight: 700;
+            font-size: 1.2em;
+        }
+
+        .ledger-item-amount.positive {
+            color: #4CAF50;
+        }
+
+        .ledger-item-amount.negative {
+            color: #f44336;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .parent-mode {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #ffc107;
+        }
+
+        .parent-mode h2 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .reward-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .reward-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid #eee;
+        }
+
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .reward-emoji {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .reward-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .reward-cost {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 2em;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal h3 {
+            margin-bottom: 15px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: 600;
+            color: #999;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-top: 4px solid #667eea;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>✨ Earn It</h1>
+                <p>Family Chore & Allowance Tracker</p>
+            </div>
+            <div class="header-controls">
+                <button class="btn-secondary" onclick="showKidSetup()">+ Add Family</button>
+                <button class="btn-parent" onclick="toggleParentMode()">🔒 Parent Mode</button>
+                <button class="btn-danger" onclick="resetApp()">Reset</button>
+            </div>
+        </div>
+
+        <div class="content" id="mainContent">
+            <!-- Kid Selection -->
+            <div class="card full-width">
+                <h2>Select Kid</h2>
+                <div class="kid-selector" id="kidSelector"></div>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="card">
+                <h2>💰 Balance & Budget</h2>
+                <div class="balance-display" id="balanceDisplay">$0.00</div>
+                <div class="money-categories" id="moneyCategories"></div>
+                <div id="goalsContainer"></div>
+            </div>
+
+            <!-- Weekly Chores -->
+            <div class="card">
+                <h2>📋 This Week's Chores</h2>
+                <table class="chore-table" id="choreTable">
+                    <thead>
+                        <tr>
+                            <th>Chore</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                            <th>Sun</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="choreBody"></tbody>
+                </table>
+            </div>
+
+            <!-- Big Job Wheel -->
+            <div class="card">
+                <h2>🎡 Big Job Wheel</h2>
+                <p style="font-size: 0.9em; color: #666; margin-bottom: 15px;">One spin per day - complete the job to spin the prize wheel!</p>
+                <div class="wheel-container">
+                    <canvas id="bigJobWheel" width="300" height="300"></canvas>
+                    <div class="wheel-result" id="wheelResult">Click to spin!</div>
+                    <button class="btn-primary" onclick="spinBigJobWheel()">🎡 Spin the Wheel</button>
+                </div>
+            </div>
+
+            <!-- Rewards -->
+            <div class="card">
+                <h2>🎁 Rewards Store</h2>
+                <div class="reward-grid" id="rewardGrid"></div>
+            </div>
+
+            <!-- Transaction Ledger -->
+            <div class="card full-width">
+                <h2>📊 Transaction Ledger</h2>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value" id="weekEarnings">$0.00</div>
+                        <div class="stat-label">This Week's Earnings</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="weekSpent">$0.00</div>
+                        <div class="stat-label">This Week's Spending</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="monthEarnings">$0.00</div>
+                        <div class="stat-label">This Month's Earnings</div>
+                    </div>
+                </div>
+                <div class="ledger-container" id="ledger"></div>
+            </div>
+
+            <!-- Parent Mode -->
+            <div class="card full-width" id="parentModePanel" style="display: none;">
+                <h2>⚙️ Parent Mode Settings</h2>
+
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('manage-chores')">Manage Chores</button>
+                    <button class="tab" onclick="switchTab('manage-rewards')">Manage Rewards</button>
+                    <button class="tab" onclick="switchTab('manage-allowance')">Allowance & Goals</button>
+                    <button class="tab" onclick="switchTab('family-setup')">Family Setup</button>
+                </div>
+
+                <!-- Manage Chores Tab -->
+                <div id="manage-chores" class="tab-content active">
+                    <h3>Weekly Chores</h3>
+                    <div class="input-group">
+                        <input type="text" id="choreNameInput" placeholder="Chore name (e.g., Load dishwasher)">
+                        <input type="number" id="choreAmountInput" placeholder="Amount ($)">
+                        <button class="btn-primary" onclick="addChore()">Add Chore</button>
+                    </div>
+                    <div id="choreList"></div>
+                </div>
+
+                <!-- Manage Rewards Tab -->
+                <div id="manage-rewards" class="tab-content">
+                    <h3>Rewards Store</h3>
+                    <div class="input-group">
+                        <input type="text" id="rewardNameInput" placeholder="Reward name">
+                        <input type="text" id="rewardEmojiInput" placeholder="Emoji" maxlength="2">
+                        <input type="number" id="rewardCostInput" placeholder="Cost ($)">
+                        <button class="btn-primary" onclick="addReward()">Add Reward</button>
+                    </div>
+                    <div id="rewardList"></div>
+                </div>
+
+                <!-- Allowance & Goals Tab -->
+                <div id="manage-allowance" class="tab-content">
+                    <h3>Base Allowance</h3>
+                    <div class="input-group">
+                        <input type="number" id="allowanceInput" placeholder="Weekly allowance ($)">
+                        <button class="btn-primary" onclick="setAllowance()">Update</button>
+                    </div>
+
+                    <h3>Savings Goals</h3>
+                    <div class="input-group">
+                        <input type="text" id="goalNameInput" placeholder="Goal (e.g., Mountain Bike)">
+                        <input type="number" id="goalAmountInput" placeholder="Target amount ($)">
+                        <button class="btn-primary" onclick="addGoal()">Add Goal</button>
+                    </div>
+                    <div id="goalList"></div>
+                </div>
+
+                <!-- Family Setup Tab -->
+                <div id="family-setup" class="tab-content">
+                    <h3>Family Members</h3>
+                    <div class="input-group">
+                        <input type="text" id="kidNameInput" placeholder="Kid's name">
+                        <input type="number" id="kidAgeInput" placeholder="Age" min="1" max="18">
+                        <button class="btn-primary" onclick="addKid()">Add Kid</button>
+                    </div>
+                    <div id="kidList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div class="modal" id="pinModal">
+        <div class="modal-content">
+            <h3>Enter Parent PIN (1234)</h3>
+            <input type="password" id="pinInput" placeholder="PIN" style="width: 100%; margin: 15px 0;">
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="checkPIN()" style="flex: 1;">Enter</button>
+                <button class="btn-secondary" onclick="closePINModal()" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kid Setup Modal -->
+    <div class="modal" id="setupModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeSetupModal()">&times;</span>
+            <h3>Set Up Your Family</h3>
+            <div id="kidSetupForm"></div>
+            <button class="btn-primary" onclick="saveFamily()" style="width: 100%; margin-top: 20px;">Start Tracking</button>
+        </div>
+    </div>
+
+    <script>
+        // DEFAULT DATA
+        const DEFAULT_CHORES = [
+            { name: 'Load dishwasher', amount: 1.50 },
+            { name: 'Make the bed', amount: 1.00 },
+            { name: 'Walk the dog', amount: 2.00 },
+            { name: 'Sweep kitchen', amount: 1.50 },
+            { name: 'Tidy room', amount: 2.00 },
+            { name: 'Help cook dinner', amount: 2.50 },
+            { name: 'Rake leaves', amount: 3.00 },
+            { name: 'Wash car', amount: 5.00 }
+        ];
+
+        const DEFAULT_REWARDS = [
+            { name: 'Pick Friday movie', emoji: '🎬', cost: 5.00 },
+            { name: 'Choose dinner night', emoji: '🍕', cost: 8.00 },
+            { name: 'Stay up 30 min late', emoji: '⏰', cost: 3.00 },
+            { name: '30 min extra screen time', emoji: '🎮', cost: 4.00 },
+            { name: 'Ice cream run', emoji: '🍦', cost: 6.00 },
+            { name: 'Skip one dish night', emoji: '🎟️', cost: 7.00 }
+        ];
+
+        const DEFAULT_BIG_JOBS = [
+            { name: 'Vacuum the car', emoji: '🚗' },
+            { name: 'Clean garage', emoji: '🔧' },
+            { name: 'Organize pantry', emoji: '📦' },
+            { name: 'Wash windows', emoji: '🪟' },
+            { name: 'Deep clean bathroom', emoji: '🛁' },
+            { name: 'Yard work', emoji: '🌱' }
+        ];
+
+        let state = {
+            kids: [],
+            currentKid: null,
+            chores: DEFAULT_CHORES,
+            rewards: DEFAULT_REWARDS,
+            bigJobs: DEFAULT_BIG_JOBS,
+            data: {} // { kidId: { balance, spend, save, invest, transactions, goals, choresCompleted } }
+        };
+
+        function initializeApp() {
+            const saved = localStorage.getItem('earnItState');
+            if (saved) {
+                state = JSON.parse(saved);
+            } else {
+                // Create default family
+                state.kids = [
+                    { id: 'kid1', name: 'Sam', age: 12, emoji: '🧒' },
+                    { id: 'kid2', name: 'Riley', age: 10, emoji: '🧒' }
+                ];
+                state.kids.forEach(kid => {
+                    state.data[kid.id] = {
+                        balance: 15.50,
+                        spend: 1.84,
+                        save: 6.84,
+                        invest: 6.82,
+                        baseAllowance: 5.00,
+                        transactions: [
+                            { date: new Date().toISOString(), type: 'allowance', amount: 5.00, description: 'Weekly allowance' }
+                        ],
+                        goals: [
+                            { name: 'Mountain bike', target: 180.00, current: 50.00 }
+                        ],
+                        choresCompleted: {}
+                    };
+                });
+                state.currentKid = state.kids[0].id;
+            }
+            saveState();
+            render();
+        }
+
+        function saveState() {
+            localStorage.setItem('earnItState', JSON.stringify(state));
+        }
+
+        function render() {
+            renderKidSelector();
+            if (state.currentKid) {
+                renderDashboard();
+                renderChoreTable();
+                renderRewards();
+                renderLedger();
+                renderBigJobWheel();
+            }
+        }
+
+        function renderKidSelector() {
+            const selector = document.getElementById('kidSelector');
+            selector.innerHTML = '';
+            state.kids.forEach(kid => {
+                const btn = document.createElement('button');
+                btn.className = `kid-btn ${kid.id === state.currentKid ? 'active' : ''}`;
+                btn.textContent = `${kid.emoji} ${kid.name}`;
+                btn.onclick = () => {
+                    state.currentKid = kid.id;
+                    saveState();
+                    render();
+                };
+                selector.appendChild(btn);
+            });
+        }
+
+        function renderDashboard() {
+            const data = state.data[state.currentKid];
+            const kid = state.kids.find(k => k.id === state.currentKid);
+
+            document.getElementById('balanceDisplay').textContent = `$${data.balance.toFixed(2)}`;
+
+            const categoriesHTML = `
+                <div class="money-box spend">
+                    <div class="money-box-label">Spend</div>
+                    <div class="money-box-amount">$${data.spend.toFixed(2)}</div>
+                </div>
+                <div class="money-box save">
+                    <div class="money-box-label">Save</div>
+                    <div class="money-box-amount">$${data.save.toFixed(2)}</div>
+                </div>
+                <div class="money-box invest">
+                    <div class="money-box-label">Invest</div>
+                    <div class="money-box-amount">$${data.invest.toFixed(2)}</div>
+                </div>
+            `;
+            document.getElementById('moneyCategories').innerHTML = categoriesHTML;
+
+            let goalsHTML = '';
+            if (data.goals && data.goals.length > 0) {
+                goalsHTML = '<h3>Savings Goals</h3>';
+                data.goals.forEach(goal => {
+                    const percent = (goal.current / goal.target) * 100;
+                    goalsHTML += `
+                        <div class="goal-tracker">
+                            <div class="goal-name">${goal.name}</div>
+                            <div class="goal-progress">
+                                <div class="goal-fill" style="width: ${percent}%"></div>
+                            </div>
+                            <div class="goal-text">$${goal.current.toFixed(2)} of $${goal.target.toFixed(2)}</div>
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('goalsContainer').innerHTML = goalsHTML;
+        }
+
+        function renderChoreTable() {
+            const data = state.data[state.currentKid];
+            const tbody = document.getElementById('choreBody');
+            tbody.innerHTML = '';
+
+            state.chores.forEach(chore => {
+                const row = document.createElement('tr');
+                const totals = [0,1,2,3,4,5,6].map(day => {
+                    const key = `${chore.name}-${day}`;
+                    return data.choresCompleted[key] ? chore.amount : 0;
+                });
+                const total = totals.reduce((a, b) => a + b, 0);
+
+                let rowHTML = `<td class="chore-name">${chore.name}</td>`;
+                for (let day = 0; day < 7; day++) {
+                    const key = `${chore.name}-${day}`;
+                    const checked = data.choresCompleted[key] ? 'checked' : '';
+                    rowHTML += `
+                        <td>
+                            <input type="checkbox" class="chore-checkbox" ${checked}
+                                onchange="toggleChore('${chore.name}', ${day})">
+                        </td>
+                    `;
+                }
+                rowHTML += `<td style="font-weight: 600;">$${total.toFixed(2)}</td>`;
+                row.innerHTML = rowHTML;
+                tbody.appendChild(row);
+            });
+        }
+
+        function toggleChore(choreName, day) {
+            const data = state.data[state.currentKid];
+            const key = `${choreName}-${day}`;
+            const chore = state.chores.find(c => c.name === choreName);
+
+            if (data.choresCompleted[key]) {
+                delete data.choresCompleted[key];
+                data.balance -= chore.amount;
+            } else {
+                data.choresCompleted[key] = true;
+                data.balance += chore.amount;
+                const today = new Date().toLocaleDateString();
+                data.transactions.unshift({
+                    date: today,
+                    type: 'chore',
+                    amount: chore.amount,
+                    description: choreName
+                });
+            }
+            saveState();
+            render();
+        }
+
+        function renderRewards() {
+            const data = state.data[state.currentKid];
+            const grid = document.getElementById('rewardGrid');
+            grid.innerHTML = '';
+
+            state.rewards.forEach(reward => {
+                const card = document.createElement('div');
+                card.className = 'reward-card';
+                card.style.opacity = data.balance >= reward.cost ? '1' : '0.5';
+                card.innerHTML = `
+                    <div class="reward-emoji">${reward.emoji}</div>
+                    <div class="reward-name">${reward.name}</div>
+                    <div class="reward-cost">$${reward.cost.toFixed(2)}</div>
+                `;
+                if (data.balance >= reward.cost) {
+                    card.onclick = () => claimReward(reward);
+                }
+                grid.appendChild(card);
+            });
+        }
+
+        function claimReward(reward) {
+            const data = state.data[state.currentKid];
+            if (data.balance >= reward.cost) {
+                data.balance -= reward.cost;
+                data.transactions.unshift({
+                    date: new Date().toLocaleDateString(),
+                    type: 'reward',
+                    amount: -reward.cost,
+                    description: `Claimed: ${reward.name}`
+                });
+                saveState();
+                render();
+            }
+        }
+
+        function renderLedger() {
+            const data = state.data[state.currentKid];
+            const ledger = document.getElementById('ledger');
+            ledger.innerHTML = '';
+
+            const weekStart = getWeekStart();
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekEnd.getDate() + 7);
+
+            let weekEarnings = 0;
+            let weekSpent = 0;
+
+            data.transactions.forEach(transaction => {
+                const transDate = new Date(transaction.date);
+                if (transDate >= weekStart && transDate <= weekEnd) {
+                    if (transaction.amount > 0) {
+                        weekEarnings += transaction.amount;
+                    } else {
+                        weekSpent += Math.abs(transaction.amount);
+                    }
+                }
+            });
+
+            document.getElementById('weekEarnings').textContent = `$${weekEarnings.toFixed(2)}`;
+            document.getElementById('weekSpent').textContent = `$${weekSpent.toFixed(2)}`;
+
+            const monthStart = new Date();
+            monthStart.setDate(1);
+            let monthEarnings = 0;
+
+            data.transactions.forEach(transaction => {
+                const transDate = new Date(transaction.date);
+                if (transDate >= monthStart && transaction.amount > 0) {
+                    monthEarnings += transaction.amount;
+                }
+            });
+
+            document.getElementById('monthEarnings').textContent = `$${monthEarnings.toFixed(2)}`;
+
+            data.transactions.slice(0, 20).forEach(transaction => {
+                const item = document.createElement('div');
+                const isPositive = transaction.amount > 0;
+                item.className = `ledger-item ${isPositive ? 'positive' : 'negative'}`;
+                item.innerHTML = `
+                    <div class="ledger-item-left">
+                        <div>${transaction.description}</div>
+                        <div class="ledger-item-date">${transaction.date}</div>
+                    </div>
+                    <div class="ledger-item-amount ${isPositive ? 'positive' : 'negative'}">
+                        ${isPositive ? '+' : ''}$${Math.abs(transaction.amount).toFixed(2)}
+                    </div>
+                `;
+                ledger.appendChild(item);
+            });
+        }
+
+        function renderBigJobWheel() {
+            const canvas = document.getElementById('bigJobWheel');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 130;
+
+            const jobs = state.bigJobs;
+            const sliceAngle = (2 * Math.PI) / jobs.length;
+            const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#F7DC6F'];
+
+            jobs.forEach((job, i) => {
+                const startAngle = i * sliceAngle - Math.PI / 2;
+                const endAngle = startAngle + sliceAngle;
+
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                const textAngle = startAngle + sliceAngle / 2;
+                const x = centerX + Math.cos(textAngle) * (radius * 0.65);
+                const y = centerY + Math.sin(textAngle) * (radius * 0.65);
+
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(job.emoji, x, y);
+            });
+        }
+
+        function spinBigJobWheel() {
+            const jobs = state.bigJobs;
+            const randomJob = jobs[Math.floor(Math.random() * jobs.length)];
+            document.getElementById('wheelResult').innerHTML = `
+                <strong>${randomJob.emoji} ${randomJob.name}</strong><br>
+                <small style="color: #666;">Complete this task and earn a prize!</small>
+            `;
+        }
+
+        function toggleParentMode() {
+            document.getElementById('pinModal').classList.add('open');
+            document.getElementById('pinInput').focus();
+        }
+
+        function checkPIN() {
+            const pin = document.getElementById('pinInput').value;
+            if (pin === '1234') {
+                document.getElementById('pinModal').classList.remove('open');
+                document.getElementById('parentModePanel').style.display = 'block';
+                renderParentMode();
+            } else {
+                alert('Incorrect PIN');
+            }
+            document.getElementById('pinInput').value = '';
+        }
+
+        function closePINModal() {
+            document.getElementById('pinModal').classList.remove('open');
+            document.getElementById('pinInput').value = '';
+        }
+
+        function renderParentMode() {
+            // Render chore management
+            const choreList = document.getElementById('choreList');
+            choreList.innerHTML = '<h4>Current Chores:</h4>';
+            state.chores.forEach((chore, i) => {
+                choreList.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: white; margin: 5px 0; border-radius: 5px;">
+                        <span>${chore.name} - $${chore.amount.toFixed(2)}</span>
+                        <button onclick="removeChore(${i})" class="btn-danger" style="padding: 5px 10px;">Remove</button>
+                    </div>
+                `;
+            });
+
+            // Render reward management
+            const rewardList = document.getElementById('rewardList');
+            rewardList.innerHTML = '<h4>Current Rewards:</h4>';
+            state.rewards.forEach((reward, i) => {
+                rewardList.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: white; margin: 5px 0; border-radius: 5px;">
+                        <span>${reward.emoji} ${reward.name} - $${reward.cost.toFixed(2)}</span>
+                        <button onclick="removeReward(${i})" class="btn-danger" style="padding: 5px 10px;">Remove</button>
+                    </div>
+                `;
+            });
+
+            // Render kid management
+            const kidList = document.getElementById('kidList');
+            kidList.innerHTML = '<h4>Family Members:</h4>';
+            state.kids.forEach((kid, i) => {
+                kidList.innerHTML += `
+                    <div style="display: flex; justify-content: space-between; padding: 8px; background: white; margin: 5px 0; border-radius: 5px;">
+                        <span>${kid.emoji} ${kid.name} (${kid.age} yrs)</span>
+                        <button onclick="removeKid(${i})" class="btn-danger" style="padding: 5px 10px;">Remove</button>
+                    </div>
+                `;
+            });
+
+            // Render goal management
+            const goalList = document.getElementById('goalList');
+            goalList.innerHTML = '<h4>Current Goals:</h4>';
+            const data = state.data[state.currentKid];
+            if (data.goals && data.goals.length > 0) {
+                data.goals.forEach((goal, i) => {
+                    goalList.innerHTML += `
+                        <div style="display: flex; justify-content: space-between; padding: 8px; background: white; margin: 5px 0; border-radius: 5px;">
+                            <span>${goal.name} - $${goal.target.toFixed(2)}</span>
+                            <button onclick="removeGoal(${i})" class="btn-danger" style="padding: 5px 10px;">Remove</button>
+                        </div>
+                    `;
+                });
+            }
+
+            document.getElementById('allowanceInput').value = data.baseAllowance || 5.00;
+        }
+
+        function addChore() {
+            const name = document.getElementById('choreNameInput').value;
+            const amount = parseFloat(document.getElementById('choreAmountInput').value);
+            if (name && amount > 0) {
+                state.chores.push({ name, amount });
+                document.getElementById('choreNameInput').value = '';
+                document.getElementById('choreAmountInput').value = '';
+                saveState();
+                render();
+                renderParentMode();
+            }
+        }
+
+        function removeChore(index) {
+            state.chores.splice(index, 1);
+            saveState();
+            render();
+            renderParentMode();
+        }
+
+        function addReward() {
+            const name = document.getElementById('rewardNameInput').value;
+            const emoji = document.getElementById('rewardEmojiInput').value;
+            const cost = parseFloat(document.getElementById('rewardCostInput').value);
+            if (name && emoji && cost > 0) {
+                state.rewards.push({ name, emoji, cost });
+                document.getElementById('rewardNameInput').value = '';
+                document.getElementById('rewardEmojiInput').value = '';
+                document.getElementById('rewardCostInput').value = '';
+                saveState();
+                render();
+                renderParentMode();
+            }
+        }
+
+        function removeReward(index) {
+            state.rewards.splice(index, 1);
+            saveState();
+            render();
+            renderParentMode();
+        }
+
+        function addGoal() {
+            const name = document.getElementById('goalNameInput').value;
+            const target = parseFloat(document.getElementById('goalAmountInput').value);
+            if (name && target > 0) {
+                const data = state.data[state.currentKid];
+                if (!data.goals) data.goals = [];
+                data.goals.push({ name, target, current: 0 });
+                document.getElementById('goalNameInput').value = '';
+                document.getElementById('goalAmountInput').value = '';
+                saveState();
+                render();
+                renderParentMode();
+            }
+        }
+
+        function removeGoal(index) {
+            const data = state.data[state.currentKid];
+            data.goals.splice(index, 1);
+            saveState();
+            render();
+            renderParentMode();
+        }
+
+        function setAllowance() {
+            const amount = parseFloat(document.getElementById('allowanceInput').value);
+            if (amount > 0) {
+                state.data[state.currentKid].baseAllowance = amount;
+                saveState();
+                render();
+            }
+        }
+
+        function addKid() {
+            const name = document.getElementById('kidNameInput').value;
+            const age = parseInt(document.getElementById('kidAgeInput').value);
+            if (name && age > 0) {
+                const id = 'kid_' + Date.now();
+                state.kids.push({ id, name, age, emoji: '🧒' });
+                state.data[id] = {
+                    balance: 0,
+                    spend: 0,
+                    save: 0,
+                    invest: 0,
+                    baseAllowance: 5.00,
+                    transactions: [],
+                    goals: [],
+                    choresCompleted: {}
+                };
+                document.getElementById('kidNameInput').value = '';
+                document.getElementById('kidAgeInput').value = '';
+                saveState();
+                render();
+                renderParentMode();
+            }
+        }
+
+        function removeKid(index) {
+            const kid = state.kids[index];
+            state.kids.splice(index, 1);
+            delete state.data[kid.id];
+            if (state.currentKid === kid.id) {
+                state.currentKid = state.kids[0]?.id || null;
+            }
+            saveState();
+            render();
+            renderParentMode();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function showKidSetup() {
+            document.getElementById('setupModal').classList.add('open');
+        }
+
+        function closeSetupModal() {
+            document.getElementById('setupModal').classList.remove('open');
+        }
+
+        function saveFamily() {
+            // Save new family setup
+            saveState();
+            render();
+            closeSetupModal();
+        }
+
+        function resetApp() {
+            if (confirm('Reset all data? This cannot be undone!')) {
+                localStorage.removeItem('earnItState');
+                location.reload();
+            }
+        }
+
+        function getWeekStart() {
+            const d = new Date();
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        // Initialize on load
+        initializeApp();
+    </script>
+</body>
+</html>
