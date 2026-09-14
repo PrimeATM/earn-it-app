@@ -1,0 +1,12 @@
+{
+  "name": "earn-it-app",
+  "version": "2.0.0",
+  "description": "Multi-kid chore and allowance tracker with individual wheels and parent approvals",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html"
+  },
+  "keywords": ["chores", "allowance", "kids", "family"],
+  "author": "Anthony",
+  "license": "MIT"
+}
